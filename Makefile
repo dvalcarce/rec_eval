@@ -14,7 +14,8 @@ CC       = gcc
 #CFLAGS   = -g -I$H  -Wall -DMDEBUG -DVERSIONID=\"$(VERSIONID)\"
 #CFLAGS   = -pg -I$H -O3 -Wall -DVERSIONID=\"$(VERSIONID)\"
 #CFLAGS   = -g -I$H -O3 -Wall -DVERSIONID=\"$(VERSIONID)\"
-CFLAGS   = -g -I$H  -Wall -DVERSIONID=\"$(VERSIONID)\"
+#CFLAGS   = -g -I$H  -Wall -DVERSIONID=\"$(VERSIONID)\"
+CFLAGS   = -02 -I$H -march=native -Wall -DVERSIONID=\"$(VERSIONID)\" -pipe
 
 # Other macros used in some or all makefiles
 INSTALL = /bin/mv
