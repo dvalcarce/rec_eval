@@ -48,7 +48,6 @@ te_calc_set_P (const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
     for (i = 0; i < res_rels.num_ret; i++) {
         predicted_score = ((TEXT_RESULTS_INFO *) results->q_results)->text_results->sim;
         actual_score = res_rels.results_rel_list[i];
-        printf("Query %s, doc %s, actual_score = %f, predicted_score = %f\n", results->qid, ((TEXT_RESULTS_INFO *) results->q_results)->text_results->docno, actual_score, predicted_score);
         if (actual_score >= 0.0) {
             n++;
             mae += fabs(actual_score - predicted_score);
