@@ -109,6 +109,8 @@ extern TREC_MEAS te_meas_prefs_avgjg_imp;
 extern TREC_MEAS te_meas_map_avgjg;
 extern TREC_MEAS te_meas_P_avgjg;
 extern TREC_MEAS te_meas_Rprec_mult_avgjg;
+extern TREC_MEAS te_meas_rmse;
+extern TREC_MEAS te_meas_mae;
 
 TREC_MEAS *te_trec_measures[] = {
     &te_meas_runid,
@@ -162,6 +164,8 @@ TREC_MEAS *te_trec_measures[] = {
     &te_meas_map_avgjg,
     &te_meas_P_avgjg,
     &te_meas_Rprec_mult_avgjg,
+    &te_meas_rmse,
+    &te_meas_mae,
 };
 int te_num_trec_measures = sizeof (te_trec_measures) / sizeof (te_trec_measures[0]);
 
@@ -175,7 +179,7 @@ static char *trec_names[] =  {
     "utility", "11pt_avg", "ndcg", "relative_P", "Rprec_mult", "success",
     "map_cut", "ndcg_cut", "ndcg_rel", "Rndcg", "binG", "G",
     "set_P", "set_recall", "set_relative_P", "set_map", "set_F",
-    "num_nonrel_judged_ret",
+    "num_nonrel_judged_ret", "rmse", "mae",
     NULL};
 static char *set_names[] =  {
     "runid", "num_q", "num_ret", "num_rel", "num_rel_ret", "utility", "set_P",
