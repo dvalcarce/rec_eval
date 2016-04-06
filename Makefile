@@ -6,7 +6,7 @@ BIN = /usr/local/bin
 
 H   = .
 
-VERSIONID = 9.0
+VERSIONID = 10.0
 
 # gcc
 CC       = gcc
@@ -15,7 +15,7 @@ CC       = gcc
 #CFLAGS   = -pg -I$H -O3 -Wall -DVERSIONID=\"$(VERSIONID)\"
 #CFLAGS   = -g -I$H -O3 -Wall -DVERSIONID=\"$(VERSIONID)\"
 #CFLAGS   = -g -I$H  -Wall -DVERSIONID=\"$(VERSIONID)\"
-CFLAGS   = -02 -I$H -march=native -Wall -DVERSIONID=\"$(VERSIONID)\" -pipe
+CFLAGS   = -O2 -I$H -march=native -Wall -DVERSIONID=\"$(VERSIONID)\"
 
 # Other macros used in some or all makefiles
 INSTALL = /bin/mv
@@ -43,7 +43,8 @@ MEAS_SRCS =  measures.c  m_map.c m_P.c m_num_q.c m_num_ret.c m_num_rel.c \
 	m_prefs_simp_ret.c m_prefs_pair_ret.c m_prefs_avgjg_ret.c\
         m_prefs_avgjg_Rnonrel_ret.c \
 	m_prefs_simp_imp.c m_prefs_pair_imp.c m_prefs_avgjg_imp.c\
-        m_map_avgjg.c m_Rprec_mult_avgjg.c m_P_avgjg.c
+        m_map_avgjg.c m_Rprec_mult_avgjg.c m_P_avgjg.c \
+	m_rmse.c m_mae.c
 
 SRCS = $(TOP_SRCS) $(FORMAT_SRCS) $(MEAS_SRCS)
 
