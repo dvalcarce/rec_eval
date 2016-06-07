@@ -12,7 +12,7 @@
 #include "trec_format.h"
 
 static int
-te_calc_set_P (const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
+te_calc_mae (const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
                const TREC_MEAS *tm, TREC_EVAL *eval);
 
 /* See trec_eval.h for definition of TREC_MEAS */
@@ -22,7 +22,7 @@ TREC_MEAS te_meas_mae = {
     MAE is a standard error metric.\n\
     It measures the difference between of the predicted rating\n",
     te_init_meas_s_float,
-    te_calc_set_P,
+    te_calc_mae,
     te_acc_meas_s,
     te_calc_avg_meas_s,
     te_print_single_meas_s_float,
@@ -30,7 +30,7 @@ TREC_MEAS te_meas_mae = {
     NULL, -1};
 
 static int
-te_calc_set_P (const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
+te_calc_mae (const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
                const TREC_MEAS *tm, TREC_EVAL *eval)
 {
     RES_RELS res_rels;
