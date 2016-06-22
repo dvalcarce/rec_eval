@@ -3,7 +3,7 @@
 
    Permission is granted for use and modification of this file for
    research, non-commercial purposes. 
-*/
+   */
 
 #include "common.h"
 #include "sysfunc.h"
@@ -22,34 +22,34 @@
    It's an error if current_bound is negative, NULL is returned.
    Procedures assume that if current bound is 0, the space has not been
    allocated at all yet.
-*/   
+   */   
 
-void *
+	void *
 te_chk_and_malloc (void *ptr, long *current_bound,
 		const long needed, const size_t size)
 {
-    if (*current_bound < 0)
-	return (NULL);
-    if (needed <= *current_bound)
-	return (ptr);
-    if (*current_bound > 0)
-	Free (ptr);
-    *current_bound += needed;
-    return ((void *) malloc (*current_bound * size));
-}
-
-void *
-te_chk_and_realloc (void *ptr, long *current_bound,
-		 const long needed, const int size)
-{
-    if (*current_bound < 0)
-	return (NULL);
-    if (needed <= *current_bound)
-	return (ptr);
-    if (*current_bound == 0) {
+	if (*current_bound < 0)
+		return (NULL);
+	if (needed <= *current_bound)
+		return (ptr);
+	if (*current_bound > 0)
+		Free (ptr);
 	*current_bound += needed;
 	return ((void *) malloc (*current_bound * size));
-    }
-    *current_bound += needed;
-    return ((void *) realloc (ptr, *current_bound * size));
+}
+
+	void *
+te_chk_and_realloc (void *ptr, long *current_bound,
+		const long needed, const int size)
+{
+	if (*current_bound < 0)
+		return (NULL);
+	if (needed <= *current_bound)
+		return (ptr);
+	if (*current_bound == 0) {
+		*current_bound += needed;
+		return ((void *) malloc (*current_bound * size));
+	}
+	*current_bound += needed;
+	return ((void *) realloc (ptr, *current_bound * size));
 }

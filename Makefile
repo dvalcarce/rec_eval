@@ -1,8 +1,8 @@
 BIN = /usr/local/bin
-#   Copyright (c) 2008 - Chris Buckley. 
+#   Copyright (c) 2008 - Chris Buckley.
 #
 #   Permission is granted for use and modification of this file for
-#   research, non-commercial purposes. 
+#   research, non-commercial purposes.
 
 H   = .
 
@@ -29,9 +29,10 @@ FORMAT_SRCS = get_qrels.c get_trec_results.c get_prefs.c get_qrels_prefs.c \
         utility_pool.c get_zscores.c convert_zscores.c
 
 MEAS_SRCS =  measures.c  m_map.c m_P.c m_num_q.c m_num_ret.c m_num_rel.c \
-        m_num_rel_ret.c m_gm_map.c m_Rprec.c m_recip_rank.c m_bpref.c \
+        m_num_rel_ret.c m_gm_map.c m_Rprec.c m_recip_rank.c m_err.c m_bpref.c \
 	m_iprec_at_recall.c m_recall.c m_Rprec_mult.c m_utility.c m_11pt_avg.c \
         m_ndcg.c m_ndcg_cut.c m_Rndcg.c m_ndcg_rel.c \
+		m_ndcg2.c m_ndcg2_cut.c \
 	m_binG.c m_G.c \
         m_rel_P.c m_success.c m_infap.c m_map_cut.c \
 	m_gm_bpref.c m_runid.c m_relstring.c \

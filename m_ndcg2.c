@@ -1,5 +1,6 @@
 /*
    Copyright (c) 2008 - Chris Buckley.
+   Copyright (c) 2016 - Daniel Valcarce.
 
    Permission is granted for use and modification of this file for
    research, non-commercial purposes.
@@ -13,32 +14,23 @@
 double log2(double x);
 
 static int
-te_calc_ndcg (const EPI *epi, const REL_INFO *rel_info,
+te_calc_ndcg2 (const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
-static PARAMS default_ndcg_gains = { NULL, 0, NULL};
+static PARAMS default_ndcg2_gains = { NULL, 0, NULL};
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_ndcg =
-{"ndcg",
-	"    Normalized Discounted Cumulative Gain\n\
-		Compute a traditional nDCG measure according to Jarvelin and\n\
-		Kekalainen (ACM ToIS v. 20, pp. 422-446, 2002)\n\
-		Gain values are set to the appropriate relevance level by default.  \n\
-		The default gain can be overridden on the command line by having \n\
-		comma separated parameters 'rel_level=gain'.\n\
-		Eg, 'trec_eval -m ndcg.1=3.5,2=9.0,4=7.0 ...'\n\
-		will give gains 3.5, 9.0, 3.0, 7.0 for relevance levels 1,2,3,4\n\
-		respectively (level 3 remains at the default).\n\
-		Gains are allowed to be 0 or negative, and relevance level 0\n\
-		can be given a gain.\n\
+TREC_MEAS te_meas_ndcg2 =
+{"ndcg2",
+	"    Normalized Discounted Cumulative Gain 2\n\
+		Compute the nDCG measure using 2^rel_level gains.\n\
 		Based on an implementation by Ian Soboroff\n",
 	te_init_meas_s_float_p_pair,
-	te_calc_ndcg,
+	te_calc_ndcg2,
 	te_acc_meas_s,
 	te_calc_avg_meas_s,
 	te_print_single_meas_s_float,
 	te_print_final_meas_s_float_p,
-	&default_ndcg_gains, -1};
+	&default_ndcg2_gains, -1};
 
 /* Keep track of valid rel_levels and associated gains */
 /* Initialized in setup_gains */
@@ -60,7 +52,7 @@ static double get_gain (const long rel_level, const GAINS *gains);
 static int comp_rel_gain ();
 
 	static int
-te_calc_ndcg (const EPI *epi, const REL_INFO *rel_info,
+te_calc_ndcg2 (const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval)
 {
 	RES_RELS res_rels;
@@ -99,7 +91,7 @@ te_calc_ndcg (const EPI *epi, const REL_INFO *rel_info,
 		if (ideal_gain > 0.0)
 			ideal_dcg += ideal_gain / log2((double)(i + 2));
 		if (epi->debug_level > 0)
-			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n",
+			printf("ndcg2: %ld %ld %3.1f %6.4f %3.1f %6.4f\n",
 					i, cur_level, results_gain, results_dcg,
 					ideal_gain, ideal_dcg);
 	}
@@ -109,7 +101,7 @@ te_calc_ndcg (const EPI *epi, const REL_INFO *rel_info,
 		if (results_gain != 0)
 			results_dcg += results_gain / log2((double) (i+2));
 		if (epi->debug_level > 0)
-			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n",
+			printf("ndcg2: %ld %ld %3.1f %6.4f %3.1f %6.4f\n",
 					i, cur_level, results_gain, results_dcg, 0.0, ideal_dcg);
 		i++;
 	}
@@ -125,13 +117,13 @@ te_calc_ndcg (const EPI *epi, const REL_INFO *rel_info,
 		if (ideal_gain > 0.0)
 			ideal_dcg += ideal_gain / log2((double)(i + 2));
 		if (epi->debug_level > 0)
-			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n",
+			printf("ndcg2: %ld %ld %3.1f %6.4f %3.1f %6.4f\n",
 					i, cur_level, 0.0, results_dcg,
 					ideal_gain, ideal_dcg);
 		i++;
 	}
 
-	/* Compare sum to ideal NDCG */
+	/* Compare sum to ideal NDCG2 */
 	if (ideal_dcg > 0.0) {
 		eval->values[tm->eval_index].value = results_dcg / ideal_dcg;
 	}
@@ -173,7 +165,7 @@ setup_gains (const TREC_MEAS *tm, const RES_RELS *res_rels, GAINS *gains)
 		else {
 			/* Not included in list of parameters. New gain level */
 			gains->rel_gains[num_gains].rel_level = i;
-			gains->rel_gains[num_gains].gain = (double) i;
+			gains->rel_gains[num_gains].gain = pow(2.0, (double) i);
 			gains->rel_gains[num_gains].num_at_level = res_rels->rel_levels[i];
 			num_gains++;
 		}
@@ -193,7 +185,8 @@ setup_gains (const TREC_MEAS *tm, const RES_RELS *res_rels, GAINS *gains)
 	return (1);
 }
 
-static int comp_rel_gain (REL_GAIN *ptr1, REL_GAIN *ptr2)
+	static int
+comp_rel_gain (REL_GAIN *ptr1, REL_GAIN *ptr2)
 {
 	return (ptr1->gain - ptr2->gain);
 }

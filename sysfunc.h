@@ -3,7 +3,7 @@
 
    Permission is granted for use and modification of this file for
    research, non-commercial purposes. 
-*/
+   */
 #ifndef SYSFUNCH
 #define SYSFUNCH
 /* Declarations of major functions within standard C libraries */
@@ -41,7 +41,7 @@
 #endif
 #ifndef offsetof
 #define offsetof(type, member) ((size_t) \
-	((char *)&((type*)0)->member - (char *)(type *)0))
+		((char *)&((type*)0)->member - (char *)(type *)0))
 #endif
 
 #endif /* SYSFUNCH */
