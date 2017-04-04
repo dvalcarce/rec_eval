@@ -1,9 +1,9 @@
 /* 
-   Copyright (c) 2008 - Chris Buckley. 
+ Copyright (c) 2008 - Chris Buckley. 
 
-   Permission is granted for use and modification of this file for
-   research, non-commercial purposes. 
-   */
+ Permission is granted for use and modification of this file for
+ research, non-commercial purposes. 
+ */
 #ifndef COMMONH
 #define COMMONH
 
@@ -31,7 +31,7 @@
  */
 #define Malloc(n,type) (type *) malloc( (unsigned) ((n)*sizeof(type)))
 #define Realloc(loc,n,type) (type *) realloc( (char *)(loc), \
-		(unsigned) ((n)*sizeof(type)))
+                                              (unsigned) ((n)*sizeof(type)))
 #define Free(loc) (void) free( (char *)(loc) )
 
 #endif /* COMMONH */

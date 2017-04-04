@@ -183,7 +183,7 @@ num_nonrel_judged_ret 	303	61
 runid                 	all	STANDARD
 num_q                 	all	3
 num_ret               	all	584
-num_rel               	all	484
+num_rel               	all	561
 num_rel_ret           	all	77
 map                   	all	0.1016
 gm_map                	all	0.0045
