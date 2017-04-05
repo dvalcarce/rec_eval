@@ -74,6 +74,7 @@ extern TREC_MEAS te_meas_P;
 extern TREC_MEAS te_meas_relstring;
 extern TREC_MEAS te_meas_recall;
 extern TREC_MEAS te_meas_infAP;
+extern TREC_MEAS te_meas_infAP2;
 extern TREC_MEAS te_meas_gm_bpref;
 extern TREC_MEAS te_meas_Rprec_mult;
 extern TREC_MEAS te_meas_utility;
@@ -120,10 +121,10 @@ TREC_MEAS *te_trec_measures[] = { &te_meas_runid, &te_meas_num_q,
 		&te_meas_num_ret, &te_meas_num_rel, &te_meas_num_rel_ret, &te_meas_map,
 		&te_meas_gm_map, &te_meas_Rprec, &te_meas_bpref, &te_meas_recip_rank,
 		&te_meas_err, &te_meas_iprec_at_recall, &te_meas_P, &te_meas_relstring,
-		&te_meas_recall, &te_meas_infAP, &te_meas_gm_bpref, &te_meas_Rprec_mult,
-		&te_meas_utility, &te_meas_11pt_avg, &te_meas_binG, &te_meas_G,
-		&te_meas_ndcg, &te_meas_ndcg2, &te_meas_ndcg_rel, &te_meas_Rndcg,
-		&te_meas_ndcg_cut, &te_meas_ndcg2_cut, &te_meas_map_cut,
+		&te_meas_recall, &te_meas_infAP, &te_meas_infAP2, &te_meas_gm_bpref,
+		&te_meas_Rprec_mult, &te_meas_utility, &te_meas_11pt_avg, &te_meas_binG,
+		&te_meas_G, &te_meas_ndcg, &te_meas_ndcg2, &te_meas_ndcg_rel,
+		&te_meas_Rndcg, &te_meas_ndcg_cut, &te_meas_ndcg2_cut, &te_meas_map_cut,
 		&te_meas_relative_P, &te_meas_success, &te_meas_set_P,
 		&te_meas_set_relative_P, &te_meas_set_recall, &te_meas_set_map,
 		&te_meas_set_F, &te_meas_num_nonrel_judged_ret,
@@ -151,9 +152,9 @@ static char *trec_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		NULL };
 static char *recsys_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"num_rel_ret", "map", "gm_map", "map_cut", "bpref", "gm_bpref",
-		"recip_rank", "err", "P", "recall", "infAP", "ndcg", "ndcg_cut",
-		"ndcg2", "ndcg2_cut", "set_P", "set_recall", "set_F", "rmse", "mae",
-		"num_nonrel_judged_ret", "yaap", NULL };
+		"recip_rank", "err", "P", "recall", "infAP", "infAP2", "ndcg",
+		"ndcg_cut", "ndcg2", "ndcg2_cut", "set_P", "set_recall", "set_F",
+		"rmse", "mae", "num_nonrel_judged_ret", "yaap", NULL };
 static char *set_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"num_rel_ret", "utility", "set_P", "set_recall", "set_relative_P",
 		"set_map", "set_F",

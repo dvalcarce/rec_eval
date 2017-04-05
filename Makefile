@@ -33,7 +33,7 @@ MEAS_SRCS =  measures.c  m_map.c m_P.c m_num_q.c m_num_ret.c m_num_rel.c \
 		m_iprec_at_recall.c m_recall.c m_Rprec_mult.c m_utility.c m_11pt_avg.c \
         m_ndcg.c m_ndcg_cut.c m_Rndcg.c m_ndcg_rel.c m_ndcg2.c m_ndcg2_cut.c \
 		m_binG.c m_G.c \
-        m_rel_P.c m_success.c m_infap.c m_map_cut.c \
+        m_rel_P.c m_success.c m_infap.c m_infap2.c m_map_cut.c \
 		m_gm_bpref.c m_runid.c m_relstring.c \
         m_set_P.c m_set_recall.c m_set_rel_P.c m_set_map.c m_set_F.c \
         m_num_nonrel_judged_ret.c \

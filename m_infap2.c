@@ -1,5 +1,6 @@
 /*
  Copyright (c) 2008 - Chris Buckley.
+ Copyright (c) 2017 - Daniel Valcarce.
 
  Permission is granted for use and modification of this file for
  research, non-commercial purposes.
@@ -12,13 +13,13 @@
 #include "trec_format.h"
 
 static int
-te_calc_infap(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
+te_calc_infap2(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 		const TREC_MEAS *tm, TREC_EVAL *eval);
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_infAP =
-		{ "infAP",
-				"    Inferred AP\n\
+TREC_MEAS te_meas_infAP2 =
+		{ "infAP2",
+				"    Inferred AP (modified) \n\
     A measure that allows sampling of judgement pool: Qrels/results divided\n\
     into unpooled, pooled_but_unjudged, pooled_judged_rel,pooled_judged_nonrel.\n\
     My intuition of infAP:\n\
@@ -29,12 +30,12 @@ TREC_MEAS te_meas_infAP =
     to be relevant in the same proportion as those judged.)\n\
     Cite:    'Estimating Average Precision with Incomplete and Imperfect\n\
     Judgments', Emine Yilmaz and Javed A. Aslam. CIKM \n",
-				te_init_meas_s_float, te_calc_infap, te_acc_meas_s,
+				te_init_meas_s_float, te_calc_infap2, te_acc_meas_s,
 				te_calc_avg_meas_s, te_print_single_meas_s_float,
 				te_print_final_meas_s_float,
 				NULL, -1 };
 
-static int te_calc_infap(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_infap2(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval) {
 	RES_RELS res_rels;
 	long j;
@@ -49,7 +50,8 @@ static int te_calc_infap(const EPI *epi, const REL_INFO *rel_info,
 	pool_unjudged_so_far = 0;
 	for (j = 0; j < res_rels.num_ret; j++) {
 		if (res_rels.results_rel_list[j] == RELVALUE_NONPOOL)
-			/* document not in pool. Skip */
+			/* document not in pool -> unjudged */
+			pool_unjudged_so_far++;
 			continue;
 		if (res_rels.results_rel_list[j] == RELVALUE_UNJUDGED) {
 			/* document in pool but unjudged. */
