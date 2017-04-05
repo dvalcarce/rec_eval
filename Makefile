@@ -6,7 +6,7 @@ BIN = /usr/local/bin
 
 H   = .
 
-VERSIONID = 10.0.1
+VERSIONID = 10.0.2
 
 # gcc
 CC       = gcc

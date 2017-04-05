@@ -49,10 +49,11 @@ static int te_calc_infap2(const EPI *epi, const REL_INFO *rel_info,
 	rel_so_far = 0;
 	pool_unjudged_so_far = 0;
 	for (j = 0; j < res_rels.num_ret; j++) {
-		if (res_rels.results_rel_list[j] == RELVALUE_NONPOOL)
+		if (res_rels.results_rel_list[j] == RELVALUE_NONPOOL) {
 			/* document not in pool -> unjudged */
 			pool_unjudged_so_far++;
 			continue;
+		}
 		if (res_rels.results_rel_list[j] == RELVALUE_UNJUDGED) {
 			/* document in pool but unjudged. */
 			pool_unjudged_so_far++;
