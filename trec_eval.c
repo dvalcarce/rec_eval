@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 static char *VersionID = VERSIONID;
 
@@ -464,7 +464,7 @@ static int add_meas_arg_info(EPI *epi, char *meas, char *param) {
 	epi->meas_arg[i].measure_name = meas;
 	epi->meas_arg[i].parameters = param;
 
-	/* Ensure measure_name exists, has non_NULL parameter and mark it 
+	/* Ensure measure_name exists, has non_NULL parameter and mark it
 	 to be calculated */
 	if (*param == '\0') {
 		fprintf(stderr, "trec_eval: improper measure in parameter '%s'\n",
@@ -504,6 +504,7 @@ static int mark_measure(EPI *epi, char *optarg) {
 	}
 
 	for (i = 0; i < te_num_trec_measure_nicknames; i++) {
+
 		if (0 == strcmp(optarg, te_trec_measure_nicknames[i].name)) {
 			/* Have found nickname.  Mark all real names it refers to */
 			char **name = te_trec_measure_nicknames[i].name_list;

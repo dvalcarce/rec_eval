@@ -136,7 +136,7 @@ TREC_MEAS *te_trec_measures[] = { &te_meas_runid, &te_meas_num_q,
 		&te_meas_prefs_simp_imp, &te_meas_prefs_pair_imp,
 		&te_meas_prefs_avgjg_imp, &te_meas_map_avgjg, &te_meas_P_avgjg,
 		&te_meas_Rprec_mult_avgjg, &te_meas_yaap, &te_meas_rmse, &te_meas_mae, };
-int te_num_trec_measures = sizeof(te_trec_measures)
+const long te_num_trec_measures = sizeof(te_trec_measures)
 		/ sizeof(te_trec_measures[0]);
 
 static char *off_names[] = { "runid", "num_q", "num_ret", "num_rel",
@@ -178,5 +178,5 @@ TREC_MEASURE_NICKNAMES te_trec_measure_nicknames[] = {
 				trec_names }, { "recsys", recsys_names }, { "all_prefs",
 				prefs_names }, { "prefs", prefs_off_name }, { "qrels_jg",
 				qrels_jg_names }, };
-int te_num_trec_measure_nicknames = sizeof(te_trec_measure_nicknames)
+const long te_num_trec_measure_nicknames = sizeof(te_trec_measure_nicknames)
 		/ sizeof(te_trec_measure_nicknames[0]);

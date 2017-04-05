@@ -17,6 +17,7 @@ CC       = gcc
 #CFLAGS   = -g -I$H  -Wall -DVERSIONID=\"$(VERSIONID)\"
 CFLAGS   = -O2 -I$H -march=native -Wall -DVERSIONID=\"$(VERSIONID)\"
 
+
 # Other macros used in some or all makefiles
 INSTALL = /bin/mv
 
