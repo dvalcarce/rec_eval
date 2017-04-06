@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -14,7 +14,7 @@
 static int
 te_calc_P_avgjg(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
-static long long_cutoff_array[] = { 5, 10, 15, 20, 30, 100, 200, 500, 1000 };
+static long long_cutoff_array[] = { 5, 10, 15, 20, 30, 100 };
 static PARAMS default_P_avgjg_cutoffs = {
 NULL, sizeof(long_cutoff_array) / sizeof(long_cutoff_array[0]),
 		&long_cutoff_array[0] };
@@ -30,7 +30,7 @@ TREC_MEAS te_meas_P_avgjg =
     If there are multiple relevance judgment sets for this query, Precision\n\
     is averaged over the judgment groups.\n\
     Cutoffs must be positive without duplicates\n\
-    Default param: trec_eval -m P.5,10,15,20,30,100,200,500,1000\n",
+    Default param: trec_eval -m P.5,10,15,20,30,100\n",
 				te_init_meas_a_float_cut_long, te_calc_P_avgjg,
 				te_acc_meas_a_cut, te_calc_avg_meas_a_cut,
 				te_print_single_meas_a_cut, te_print_final_meas_a_cut,

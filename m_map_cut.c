@@ -28,7 +28,7 @@ TREC_MEAS te_meas_map_cut =
     Map itself is precision measured after each relevant doc is retrieved,\n\
     averaged over all relevant docs for the topic.\n\
     Cutoffs must be positive without duplicates\n\
-    Default param: -m map_cut.5,10,15,20,30,100,200,500,1000\n",
+    Default param: -m map_cut.5,10,15,20,30,100\n",
 				te_init_meas_a_float_cut_long, te_calc_map_cut,
 				te_acc_meas_a_cut, te_calc_avg_meas_a_cut,
 				te_print_single_meas_a_cut, te_print_final_meas_a_cut,

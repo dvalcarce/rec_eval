@@ -1,6 +1,5 @@
 /*
  Copyright (c) 2008 - Chris Buckley.
- Copyright (c) 2016 - Daniel Valcarce.
 
  Permission is granted for use and modification of this file for
  research, non-commercial purposes.
@@ -14,19 +13,22 @@
 double log2(double x);
 
 static int
-te_calc_ndcg2(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
+te_calc_ndcg45(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 		const TREC_MEAS *tm, TREC_EVAL *eval);
-static PARAMS default_ndcg2_gains = { NULL, 0, NULL };
+static PARAMS default_ndcg_gains = { NULL, 0, NULL };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_ndcg2 =
-		{ "ndcg2",
-				"    Normalized Discounted Cumulative Gain 2\n\
-		Compute the nDCG measure using 2^rel_level gains.\n\
-		Based on Ian Soboroff implementation.\n",
-				te_init_meas_s_float_p_pair, te_calc_ndcg2, te_acc_meas_s,
+TREC_MEAS te_meas_ndcg45 =
+		{ "ndcg45",
+				"    Normalized Discounted Cumulative Gain\n\
+    Compute a nDCG measure according to Jarvelin and\n\
+    Kekalainen (ACM ToIS v. 20, pp. 422-446, 2002)\n\
+    Gain values are 1 for relevance value 4 and 2 for relevance\n\
+	value 5 in the qrels file.\n\
+    Based on an implementation by Ian Soboroff\n",
+				te_init_meas_s_float_p_pair, te_calc_ndcg45, te_acc_meas_s,
 				te_calc_avg_meas_s, te_print_single_meas_s_float,
-				te_print_final_meas_s_float_p, &default_ndcg2_gains, -1 };
+				te_print_final_meas_s_float_p, &default_ndcg_gains, -1 };
 
 /* Keep track of valid rel_levels and associated gains */
 /* Initialized in setup_gains */
@@ -46,8 +48,9 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 		GAINS *gains);
 static double get_gain(const long rel_level, const GAINS *gains);
 static int comp_rel_gain();
+static double compute_gain(const long rel_level);
 
-static int te_calc_ndcg2(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_ndcg45(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval) {
 	RES_RELS res_rels;
 	double results_gain, results_dcg;
@@ -86,7 +89,7 @@ static int te_calc_ndcg2(const EPI *epi, const REL_INFO *rel_info,
 		if (ideal_gain > 0.0)
 			ideal_dcg += ideal_gain / log2((double) (i + 2));
 		if (epi->debug_level > 0)
-			printf("ndcg2: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_level,
+			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_level,
 					results_gain, results_dcg, ideal_gain, ideal_dcg);
 	}
 	while (i < res_rels.num_ret) {
@@ -95,7 +98,7 @@ static int te_calc_ndcg2(const EPI *epi, const REL_INFO *rel_info,
 		if (results_gain != 0)
 			results_dcg += results_gain / log2((double) (i + 2));
 		if (epi->debug_level > 0)
-			printf("ndcg2: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_level,
+			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_level,
 					results_gain, results_dcg, 0.0, ideal_dcg);
 		i++;
 	}
@@ -112,12 +115,12 @@ static int te_calc_ndcg2(const EPI *epi, const REL_INFO *rel_info,
 		if (ideal_gain > 0.0)
 			ideal_dcg += ideal_gain / log2((double) (i + 2));
 		if (epi->debug_level > 0)
-			printf("ndcg2: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_level,
-					0.0, results_dcg, ideal_gain, ideal_dcg);
+			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_level, 0.0,
+					results_dcg, ideal_gain, ideal_dcg);
 		i++;
 	}
 
-	/* Compare sum to ideal NDCG2 */
+	/* Compare sum to ideal NDCG */
 	if (ideal_dcg > 0.0) {
 		eval->values[tm->eval_index].value = results_dcg / ideal_dcg;
 	}
@@ -159,7 +162,7 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 		else {
 			/* Not included in list of parameters. New gain level */
 			gains->rel_gains[num_gains].rel_level = i;
-			gains->rel_gains[num_gains].gain = pow(2.0, (double) i);
+			gains->rel_gains[num_gains].gain = compute_gain(i);
 			gains->rel_gains[num_gains].num_at_level = res_rels->rel_levels[i];
 			num_gains++;
 		}
@@ -183,8 +186,22 @@ static int comp_rel_gain(REL_GAIN *ptr1, REL_GAIN *ptr2) {
 
 static double get_gain(const long rel_level, const GAINS *gains) {
 	long i;
-	for (i = 0; i < gains->num_gains; i++)
-		if (rel_level == gains->rel_gains[i].rel_level)
+	for (i = 0; i < gains->num_gains; i++) {
+		if (rel_level == gains->rel_gains[i].rel_level) {
 			return (gains->rel_gains[i].gain);
+		}
+	}
 	return (0.0); /* Print Error ?? */
 }
+
+static inline double compute_gain(const long rel_level) {
+	switch (rel_level) {
+	case 4:
+		return 1.0;
+	case 5:
+		return 2.0;
+	default:
+		return 0.0;
+	}
+}
+
