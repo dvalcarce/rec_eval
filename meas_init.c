@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -287,12 +287,12 @@ static int get_long_cutoffs(PARAMS *params, char *param_string) {
 
 	/* Sanity checking: cutoffs > 0 and non-duplicates */
 	if (cutoffs[0] <= 0) {
-		fprintf(stderr, "trec_eval: Negative cutoff detected\n");
+		fprintf(stderr, "rec_eval: Negative cutoff detected\n");
 		return (UNDEF);
 	}
 	for (i = 1; i < num_cutoffs; i++) {
 		if (cutoffs[i - 1] == cutoffs[i]) {
-			fprintf(stderr, "trec_eval: duplicate cutoffs detected\n");
+			fprintf(stderr, "rec_eval: duplicate cutoffs detected\n");
 			return (UNDEF);
 		}
 	}
@@ -341,7 +341,7 @@ static int get_float_cutoffs(PARAMS *params, char *param_string) {
 	/* Sanity checking: non-duplicates */
 	for (i = 1; i < num_cutoffs; i++) {
 		if (cutoffs[i - 1] == cutoffs[i]) {
-			fprintf(stderr, "trec_eval: duplicate cutoffs detected\n");
+			fprintf(stderr, "rec_eval: duplicate cutoffs detected\n");
 			return (UNDEF);
 		}
 	}
@@ -412,7 +412,7 @@ static int get_param_pairs(PARAMS *params, char *param_string) {
 		}
 	}
 	if (last_seen != '=') {
-		fprintf(stderr, "trec_eval: malformed pair parameters in '%s'\n",
+		fprintf(stderr, "rec_eval: malformed pair parameters in '%s'\n",
 				param_string);
 		return (UNDEF);
 	}

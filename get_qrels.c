@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -15,7 +15,7 @@
  Relevance for each docno to qid is determined from text_qrels_file, which
  consists of text tuples of the form
  qid  iter  docno  rel
- giving TREC document numbers (docno, a string) and their relevance (rel, 
+ giving TREC document numbers (docno, a string) and their relevance (rel,
  an integer between -127 and 127) to query qid (a string).  Iter is ignored
  Fields are separated by whitespace, string fields can contain no whitespace.
  File may contain no NULL characters.
@@ -37,13 +37,13 @@
  TEXT_QRELS *text_qrels;            * Array of judged TEXT_QRELS.
  Kept sorted by docno *
  } TEXT_QRELS_INFO;
- 
+
  typedef struct {
  char *qid;                      * query id *
  char *rel_format;               * format of rel_info data. Eg, "qrels" *
  void *q_rel_info;               * relevance info for this qid *
  } REL_INFO;
- 
+
  typedef struct {                    * Overall relevance judgements *
  long num_q_rels;                * Number of REL_INFO queries *
  long max_num_q_rels;            * Num queries space reserved for *
@@ -62,7 +62,7 @@ static int parse_qrels_line(char **start_ptr, char **qid_ptr, char **docno_ptr,
 
 static int comp_lines_qid_docno();
 
-/* static pools of memory, allocated here and never changed.  
+/* static pools of memory, allocated here and never changed.
  Declared static so one day I can write a cleanup procedure to free them */
 static char *trec_qrels_buf = NULL;
 static TEXT_QRELS_INFO *text_info_pool = NULL;
@@ -90,7 +90,7 @@ int te_get_qrels(EPI *epi, char *text_qrels_file, ALL_REL_INFO *all_rel_info) {
 			NULL == (trec_qrels_buf = malloc((unsigned) size + 2))
 			|| -1 == lseek(fd, 0L, 0) || size != read(fd, trec_qrels_buf, size)
 			|| -1 == close(fd)) {
-		fprintf(stderr, "trec_eval.get_qrels: Cannot read qrels file '%s'\n",
+		fprintf(stderr, "rec_eval.get_qrels: Cannot read qrels file '%s'\n",
 				text_qrels_file);
 		return (UNDEF);
 	}
@@ -116,7 +116,7 @@ int te_get_qrels(EPI *epi, char *text_qrels_file, ALL_REL_INFO *all_rel_info) {
 		if (UNDEF
 				== parse_qrels_line(&ptr, &line_ptr->qid, &line_ptr->docno,
 						&line_ptr->rel)) {
-			fprintf(stderr, "trec_eval.get_qrels: Malformed line %ld\n",
+			fprintf(stderr, "rec_eval.get_qrels: Malformed line %ld\n",
 					(long) (line_ptr - lines + 1));
 			return (UNDEF);
 		}

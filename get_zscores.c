@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -13,7 +13,7 @@
 
 /* Read a Zscore file containing means and stddev from a reference set of runs
  for each measure and qid to be calculated.
- Format of Zscore file is 
+ Format of Zscore file is
  qid  measure_name  mean stddev
  where measure_name and qid are strings, and mean and stddev are doubles.
 
@@ -81,7 +81,7 @@ int te_get_zscores(const EPI *epi, const char *zscores_file,
 			|| -1 == lseek(fd, 0L, 0)
 			|| size != read(fd, trec_zscores_buf, size) || -1 == close(fd)) {
 		fprintf(stderr,
-				"trec_eval.get_zscores: Cannot read zscores file '%s'\n",
+				"rec_eval.get_zscores: Cannot read zscores file '%s'\n",
 				zscores_file);
 		return (UNDEF);
 	}
@@ -107,7 +107,7 @@ int te_get_zscores(const EPI *epi, const char *zscores_file,
 		if (UNDEF
 				== parse_zscore_line(&ptr, &line_ptr->qid, &line_ptr->meas,
 						&line_ptr->mean, &line_ptr->stddev)) {
-			fprintf(stderr, "trec_eval.get_zscores: Malformed line %ld\n",
+			fprintf(stderr, "rec_eval.get_zscores: Malformed line %ld\n",
 					(long) (line_ptr - lines + 1));
 			return (UNDEF);
 		}

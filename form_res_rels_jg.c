@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 #include "common.h"
 #include "sysfunc.h"
@@ -23,7 +23,7 @@
  values are cached until the query changes.
 
  results and rel_info formats must be "trec_results" and "qrels_jg"
- respectively.  
+ respectively.
 
  UNDEF returned if error, 0 if used cache values, 1 if new values.
  */
@@ -79,7 +79,7 @@ int te_form_res_rels_jg(const EPI *epi, const REL_INFO *rel_info,
 	if (strcmp("qrels_jg", rel_info->rel_format)
 			|| strcmp("trec_results", results->ret_format)) {
 		fprintf(stderr,
-				"trec_eval: rel_info format not qrels_jg or results format not trec_results\n");
+				"rec_eval: rel_info format not qrels_jg or results format not trec_results\n");
 		return (UNDEF);
 	}
 
@@ -138,7 +138,7 @@ int te_form_res_rels_jg(const EPI *epi, const REL_INFO *rel_info,
 	/* Error checking for duplicates */
 	for (i = 1; i < num_results; i++) {
 		if (0 == strcmp(docno_info[i].docno, docno_info[i - 1].docno)) {
-			fprintf(stderr, "trec_eval.form_res_qrels: duplicate docs %s",
+			fprintf(stderr, "rec_eval.form_res_qrels: duplicate docs %s",
 					docno_info[i].docno);
 			return (UNDEF);
 		}

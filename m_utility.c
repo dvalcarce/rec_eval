@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 #include "common.h"
 #include "sysfunc.h"
@@ -54,7 +54,7 @@ static int te_calc_utility(const EPI *epi, const REL_INFO *rel_info,
 
 	if (tm->meas_params->num_params != 4) {
 		fprintf(stderr,
-				"trec_eval.calc_utility: improper number of coefficients\n");
+				"rec_eval.calc_utility: improper number of coefficients\n");
 		return (UNDEF);
 	}
 

@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 /* Copyright 2008 Chris Buckley */
 
@@ -16,14 +16,14 @@
  results_prefs_info object giving the preferences from judged_prefs that
  are observed in the retrieved docs.
 
- Three part process here: 
+ Three part process here:
  1. Add a docid_rank (0..num_judged) to the judgment prefs that for
  every docno in any judgment pref gives the relative rank at which
  it occurs in the results (a number 0 to num_judged_ret-1).  If the
  docno does not occur in the results, it is given a (consistent)
  value from num_judged_ret to num_judged-1.  These docid_ranks are
  used to represent the docs within preferences.
- 
+
  2. Go through the judgements again and represent all preferences per judgment
  group (JG).  Two options for representing the preferences within a JG:
  A. If there is only 1 judgment sub-group (JSG), then the preferences are
@@ -41,7 +41,7 @@
  need set of judgments, and is required to be consistent (inconsistent
  preferences are represented in different JGs).  Preference array is of
  size num_judged * num_judged.
- 3. Go through the preference in each JG, and count num_fulfilled and 
+ 3. Go through the preference in each JG, and count num_fulfilled and
  num_possible preferences in categories "retrieved", "implied" and
  "not_retrieved" where
  retrieved means both A and B were retrieved in a pref A > B
@@ -51,7 +51,7 @@
  categories.  Counting preferences is accomplished in the two preference
  representations by:
  A. When comparing EC1 and EC2 with EC1.rel_level > EC2.rel_level, compare
- each (docid) rank1 in EC1->ranks with rank2 in EC2->ranks.  
+ each (docid) rank1 in EC1->ranks with rank2 in EC2->ranks.
  If rank1 < num_judged_ret then it was retrieved, similarly for rank2.
  If both retrieved, then if rank1 < rank2 the preference is fulfilled
  otherwise it wasn't.
@@ -82,7 +82,7 @@
  Simply count the marks (PA[i][j] == 1) in each appropriate area.
 
  As well as storing counts within each JG, a counts array for the
- entire pref_results is constructed. Counts_array CA is exactly the same 
+ entire pref_results is constructed. Counts_array CA is exactly the same
  format and size as the preference arrays, except CA[i][j] is the sum
  of the conceptual PA[i][j] over all JGs.  This allows counts of
  confirmations (CA[i][j] > 1) and conflicts (CA[i][j] and CA[j][i] both
@@ -97,7 +97,7 @@
  values are cached until the qid changes.
 
  results and prefs_info formats must be "trec_results" and "prefs"
- respectively.  
+ respectively.
 
  UNDEF returned if error, 0 if used cache values, 1 if new values.
  */
@@ -228,7 +228,7 @@ int form_prefs_counts(const EPI *epi, const REL_INFO *rel_info,
 			&& strcmp("qrels_prefs", rel_info->rel_format))
 			|| strcmp("trec_results", results->ret_format)) {
 		fprintf(stderr,
-				"trec_eval.form_prefs_info: prefs_info format not (prefs or qrels_prefs) or results format not trec_results\n");
+				"rec_eval.form_prefs_info: prefs_info format not (prefs or qrels_prefs) or results format not trec_results\n");
 		return (UNDEF);
 	}
 
@@ -440,7 +440,7 @@ static int form_jg_ec(const PREFS_AND_RANKS *prefs, const long num_prefs,
 		ec_ptr->docid_ranks[ec_ptr->num_in_ec++] = prefs[i].rank;
 	}
 
-	/* Add counts of preference fulfilled and possible to jg and 
+	/* Add counts of preference fulfilled and possible to jg and
 	 summary counts */
 	if (UNDEF == add_ec_pref_to_jg(jg, results_prefs))
 		return (UNDEF);
@@ -465,7 +465,7 @@ static int add_ec_pref_to_jg(JG *jg, RESULTS_PREFS *results_prefs) {
 	jg->num_rel = 0;
 	jg->num_rel_ret = 0;
 
-	/* Go through all ecs counting preferences, and setting up 
+	/* Go through all ecs counting preferences, and setting up
 	 prefs_count */
 	for (ec1 = 0; ec1 < jg->num_ecs; ec1++) {
 		/* Count num rel and ret */
@@ -496,7 +496,7 @@ static int add_ec_pref_to_jg(JG *jg, RESULTS_PREFS *results_prefs) {
 					/* check for inconsistency: same doc in multiple ec */
 					if (*ptr1 == *ptr2) {
 						fprintf(stderr,
-								"trec_eval.form_prefs_counts: Internal docid %ld occurs with different rel_level in same jsg\n",
+								"rec_eval.form_prefs_counts: Internal docid %ld occurs with different rel_level in same jsg\n",
 								*ptr1);
 						return (UNDEF);
 						/* need to check this in pa also? */
@@ -551,7 +551,7 @@ static int form_jg_pa(const PREFS_AND_RANKS *prefs, const long num_prefs,
 				|| (jg->rel_array[prefs[i].rank] == 0.0
 						&& prefs[i].rel_level > 0.0)) {
 			fprintf(stderr,
-					"trec_eval.form_prefs_counts: doc '%s' has both 0 and non-0 rel_level assigned\n",
+					"rec_eval.form_prefs_counts: doc '%s' has both 0 and non-0 rel_level assigned\n",
 					prefs[i].docno);
 			return (UNDEF);
 		}
@@ -575,7 +575,7 @@ static int form_jg_pa(const PREFS_AND_RANKS *prefs, const long num_prefs,
 	if (UNDEF == add_transitives(pa))
 		return (UNDEF);
 
-	/* Add counts of preference fulfilled and possible to jg and 
+	/* Add counts of preference fulfilled and possible to jg and
 	 summary counts */
 	if (UNDEF == add_pa_pref_to_jg(jg, results_prefs))
 		return (UNDEF);
@@ -649,7 +649,7 @@ static int add_transitives(PREFS_ARRAY *pa) {
 		for (j = 0; j < pa->num_judged; j++) {
 			if (i != j && pa->array[i][j] && pa->array[j][i]) {
 				fprintf(stderr,
-						"trec_eval.form_prefs_counts: Pref inconsistency found\n      internal rank %ld and internal rank %ld are conflicted\n",
+						"rec_eval.form_prefs_counts: Pref inconsistency found\n      internal rank %ld and internal rank %ld are conflicted\n",
 						i, j);
 				abort();
 				return (-1);
@@ -806,7 +806,7 @@ static int form_prefs_and_ranks(const EPI*epi,
 	/* Error checking for duplicates */
 	for (i = 1; i < num_results; i++) {
 		if (0 == strcmp(docno_results[i].docno, docno_results[i - 1].docno)) {
-			fprintf(stderr, "trec_eval.form_prefs_counts: duplicate docs %s",
+			fprintf(stderr, "rec_eval.form_prefs_counts: duplicate docs %s",
 					docno_results[i].docno);
 			return (UNDEF);
 		}

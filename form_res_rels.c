@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 #include "common.h"
 #include "sysfunc.h"
@@ -22,7 +22,7 @@
  values are cached until the query changes.
 
  results and rel_info formats must be "trec_results" and "qrels"
- respectively.  
+ respectively.
 
  UNDEF returned if error, 0 if used cache values, 1 if new values.
  */
@@ -73,7 +73,7 @@ int te_form_res_rels(const EPI *epi, const REL_INFO *rel_info,
 	if (strcmp("qrels", rel_info->rel_format)
 			|| strcmp("trec_results", results->ret_format)) {
 		fprintf(stderr,
-				"trec_eval.form_res_qrels: rel_info format not qrels or results format not trec_results\n");
+				"rec_eval.form_res_qrels: rel_info format not qrels or results format not trec_results\n");
 		return (UNDEF);
 	}
 
@@ -126,7 +126,7 @@ int te_form_res_rels(const EPI *epi, const REL_INFO *rel_info,
 	/* Error checking for duplicates */
 	for (i = 1; i < num_results; i++) {
 		if (0 == strcmp(docno_info[i].docno, docno_info[i - 1].docno)) {
-			fprintf(stderr, "trec_eval.form_res_qrels: duplicate docs %s",
+			fprintf(stderr, "rec_eval.form_res_qrels: duplicate docs %s",
 					docno_info[i].docno);
 			return (UNDEF);
 		}
@@ -142,7 +142,7 @@ int te_form_res_rels(const EPI *epi, const REL_INFO *rel_info,
 		if (max_rel < qrels_ptr->rel)
 			max_rel = qrels_ptr->rel;
 		if (0 == strcmp((qrels_ptr - 1)->docno, qrels_ptr->docno)) {
-			fprintf(stderr, "trec_eval.form_res_rels: duplicate docs %s\n",
+			fprintf(stderr, "rec_eval.form_res_rels: duplicate docs %s\n",
 					qrels_ptr->docno);
 			return (UNDEF);
 		}

@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -24,7 +24,7 @@
  text_prefs_file, which consists of text tuples of the form
  qid  ujg   docno  rel_level
  giving TREC document numbers (docno, a string) and their relevance
- level (rel_level,a non-negative float) to query qid (a string) for a 
+ level (rel_level,a non-negative float) to query qid (a string) for a
  user judgment group (ujg, a string).
  Fields are separated by whitespace, string fields can contain no whitespace.
  File may contain no NULL characters.
@@ -41,7 +41,7 @@
  qid1  ujg1   docno1  3.0
  qid1  ujg1   docno2  2.0
 
- If a user completely ranks some small number N (5-10) of docs, then N lines 
+ If a user completely ranks some small number N (5-10) of docs, then N lines
  are used.
  For example:
  qid1  ujg1    docno1  3.0
@@ -50,7 +50,7 @@
  qid1  ujg1    docno4  6.0
  qid1  ujg1    docno5  0.0
  qid1  ujg1    docno6  2.0
- establishes a total of 13 preferences (5 with docno4 preferred, 4 with docno1 
+ establishes a total of 13 preferences (5 with docno4 preferred, 4 with docno1
  preferred, 2 each with docno2 and docno6 preferred).
 
  A Judgment Group (JG) conceptually represents preferences for a single
@@ -88,7 +88,7 @@ static int parse_qrels_prefs_line(char **start_ptr, char **qid_ptr,
 
 static int comp_lines_qid_docno();
 
-/* static pools of memory, allocated here and never changed.  
+/* static pools of memory, allocated here and never changed.
  Declared static so one day I can write a cleanup procedure to free them */
 static char *trec_prefs_buf = NULL;
 static TEXT_PREFS_INFO *text_info_pool = NULL;
@@ -125,7 +125,7 @@ int te_get_qrels_prefs(EPI *epi, char *text_prefs_file,
 			NULL == (trec_prefs_buf = malloc((unsigned) size + 2))
 			|| -1 == lseek(fd, 0L, 0) || size != read(fd, trec_prefs_buf, size)
 			|| -1 == close(fd)) {
-		fprintf(stderr, "trec_eval.get_prefs: Cannot read prefs file '%s'\n",
+		fprintf(stderr, "rec_eval.get_prefs: Cannot read prefs file '%s'\n",
 				text_prefs_file);
 		return (UNDEF);
 	}
@@ -151,7 +151,7 @@ int te_get_qrels_prefs(EPI *epi, char *text_prefs_file,
 		if (UNDEF
 				== parse_qrels_prefs_line(&ptr, &line_ptr->qid, &line_ptr->jg,
 						&line_ptr->docno, &line_ptr->rel)) {
-			fprintf(stderr, "trec_eval.get_qrels_prefs: Malformed line %ld\n",
+			fprintf(stderr, "rec_eval.get_qrels_prefs: Malformed line %ld\n",
 					(long) (line_ptr - lines + 1));
 			return (UNDEF);
 		}

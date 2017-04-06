@@ -7,7 +7,7 @@
 static char *VersionID = VERSIONID;
 
 static char *help_message =
-		"trec_eval [-h] [-q] [-m measure[.params] [-c] [-n] [-l <num>]\n\
+		"rec_eval [-h] [-q] [-m measure[.params] [-c] [-n] [-l <num>]\n\
    [-D debug_level] [-N <num>] [-M <num>] [-R rel_format] [-T results_format]\n\
    rel_info_file  results_file \n\
  \n\
@@ -115,11 +115,11 @@ it will not be detected.  Use the -c flag to avoid this behavior. \n\
 #endif /* MDEBUG */
 
 static char *usage =
-		"Usage: trec_eval [-h] [-q] {-m measure}* trec_rel_file trec_top_file\n\
+		"Usage: rec_eval [-h] [-q] {-m measure}* trec_rel_file trec_top_file\n\
    -h: Give full help information, including other options\n\
    -q: In addition to summary evaluation, give evaluation for each query\n\
    -m: calculate and print measures indicated by 'measure'\n\
-       ('-m all_qrels' prints all qrels measures, '-m official' is default)\n";
+       ('-m recsys' prints all recsys measures)\n";
 
 extern long te_num_trec_measures;
 extern TREC_MEAS *te_trec_measures[];
@@ -203,7 +203,7 @@ int main(argc, argv)
 			help_wanted++;
 			break;
 		case 'v':
-			fprintf(stderr, "trec_eval version %s\n", VersionID);
+			fprintf(stderr, "rec_eval version %s\n", VersionID);
 			exit(0);
 		case 'q':
 			epi.query_flag++;
@@ -211,7 +211,7 @@ int main(argc, argv)
 		case 'm':
 			/* Mark measure(s) indicated by optarg to be done */
 			if (UNDEF == mark_measure(&epi, optarg)) {
-				fprintf(stderr, "trec_eval: illegal measure '%s'\n", optarg);
+				fprintf(stderr, "rec_eval: illegal measure '%s'\n", optarg);
 				exit(1);
 			}
 			measure_marked_flag++;
@@ -279,7 +279,7 @@ int main(argc, argv)
 			if (UNDEF
 					== te_rel_info_format[i].get_file(&epi, trec_rel_info_file,
 							&all_rel_info)) {
-				fprintf(stderr, "trec_eval: Quit in file '%s'\n",
+				fprintf(stderr, "rec_eval: Quit in file '%s'\n",
 						trec_rel_info_file);
 				exit(2);
 			}
@@ -287,7 +287,7 @@ int main(argc, argv)
 		}
 	}
 	if (i >= te_num_rel_info_format) {
-		fprintf(stderr, "trec_eval: Illegal rel_format '%s'\n",
+		fprintf(stderr, "rec_eval: Illegal rel_format '%s'\n",
 				epi.rel_info_format);
 		exit(2);
 	}
@@ -296,7 +296,7 @@ int main(argc, argv)
 			if (UNDEF
 					== te_results_format[i].get_file(&epi, trec_results_file,
 							&all_results)) {
-				fprintf(stderr, "trec_eval: Quit in file '%s'\n",
+				fprintf(stderr, "rec_eval: Quit in file '%s'\n",
 						trec_results_file);
 				exit(2);
 			}
@@ -304,7 +304,7 @@ int main(argc, argv)
 		}
 	}
 	if (i >= te_num_results_format) {
-		fprintf(stderr, "trec_eval: Illegal retrieval results format '%s'\n",
+		fprintf(stderr, "rec_eval: Illegal retrieval results format '%s'\n",
 				epi.results_format);
 		exit(2);
 	}
@@ -318,7 +318,7 @@ int main(argc, argv)
 	if (0 == measure_marked_flag) {
 		/* If no measures designated on command line, first mark "official" */
 		if (UNDEF == mark_measure(&epi, "official")) {
-			fprintf(stderr, "trec_eval: illegal measure 'official'\n");
+			fprintf(stderr, "rec_eval: illegal measure 'official'\n");
 			exit(1);
 		}
 	}
@@ -328,7 +328,7 @@ int main(argc, argv)
 			if (UNDEF
 					== te_trec_measures[m]->init_meas(&epi, te_trec_measures[m],
 							&accum_eval)) {
-				fprintf(stderr, "trec_eval: Cannot initialize measure '%s'\n",
+				fprintf(stderr, "rec_eval: Cannot initialize measure '%s'\n",
 						te_trec_measures[m]->name);
 				exit(2);
 			}
@@ -375,7 +375,7 @@ int main(argc, argv)
 								&all_rel_info.rel_info[j],
 								&all_results.results[i], te_trec_measures[m],
 								&q_eval)) {
-					fprintf(stderr, "trec_eval: Can't calculate measure '%s'\n",
+					fprintf(stderr, "rec_eval: Can't calculate measure '%s'\n",
 							te_trec_measures[m]->name);
 					exit(4);
 				}
@@ -395,7 +395,7 @@ int main(argc, argv)
 						== te_trec_measures[m]->acc_meas(&epi,
 								te_trec_measures[m], &q_eval, &accum_eval)) {
 					fprintf(stderr,
-							"trec_eval: Can't accumulate measure '%s'\n",
+							"rec_eval: Can't accumulate measure '%s'\n",
 							te_trec_measures[m]->name);
 					exit(5);
 				}
@@ -405,7 +405,7 @@ int main(argc, argv)
 								== te_trec_measures[m]->print_single_meas(&epi,
 										te_trec_measures[m], &q_eval)) {
 					fprintf(stderr,
-							"trec_eval: Can't print query measure '%s'\n",
+							"rec_eval: Can't print query measure '%s'\n",
 							te_trec_measures[m]->name);
 					exit(6);
 				}
@@ -416,7 +416,7 @@ int main(argc, argv)
 
 	if (accum_eval.num_queries == 0) {
 		fprintf(stderr,
-				"trec_eval: No queries with both results and relevance info\n");
+				"rec_eval: No queries with both results and relevance info\n");
 		exit(7);
 	}
 
@@ -432,7 +432,7 @@ int main(argc, argv)
 					UNDEF
 							== te_trec_measures[m]->print_final_and_cleanup_meas(
 									&epi, te_trec_measures[m], &accum_eval)) {
-				fprintf(stderr, "trec_eval: Can't print measure '%s'\n",
+				fprintf(stderr, "rec_eval: Can't print measure '%s'\n",
 						te_trec_measures[m]->name);
 				exit(8);
 			}
@@ -440,7 +440,7 @@ int main(argc, argv)
 	}
 
 	if (UNDEF == cleanup(&epi)) {
-		fprintf(stderr, "trec_eval: cleanup failed\n");
+		fprintf(stderr, "rec_eval: cleanup failed\n");
 		exit(10);
 	}
 	Free(q_eval.values);
@@ -467,7 +467,7 @@ static int add_meas_arg_info(EPI *epi, char *meas, char *param) {
 	/* Ensure measure_name exists, has non_NULL parameter and mark it
 	 to be calculated */
 	if (*param == '\0') {
-		fprintf(stderr, "trec_eval: improper measure in parameter '%s'\n",
+		fprintf(stderr, "rec_eval: improper measure in parameter '%s'\n",
 				epi->meas_arg[i].measure_name);
 		return (UNDEF);
 	}

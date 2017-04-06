@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -16,11 +16,11 @@
  Read text tuples from trec_results_file of the form
  030  Q0  ZF08-175-870  0   4238   prise1
  qid iter   docno      rank  sim   run_id
- giving TREC document numbers (a string) retrieved by query qid 
+ giving TREC document numbers (a string) retrieved by query qid
  (a string) with similarity sim (a float).  The other fields are ignored,
  with the exception that the run_id field of the last line is kept and
  output.  In particular, note that the rank field is ignored here;
- internally ranks will be assigned by sorting by the sim field with ties 
+ internally ranks will be assigned by sorting by the sim field with ties
  broken determinstically (using docno).
  Sim is assumed to be higher for the docs to be retrieved first.
  File may contain no NULL characters.
@@ -41,7 +41,7 @@ static int parse_results_line(char **start_ptr, char **qid_ptr,
 
 static int comp_lines_qid_docno();
 
-/* static pools of memory, allocated here and never changed.  
+/* static pools of memory, allocated here and never changed.
  Declared static so one day I can write a cleanup procedure to free them */
 static char *trec_results_buf = NULL;
 static TEXT_RESULTS_INFO *text_info_pool = NULL;
@@ -73,20 +73,20 @@ int te_get_trec_results(EPI *epi, char *text_results_file,
 					PROT_READ,
 					MAP_SHARED, fd, (off_t) 0))) {
 		fprintf(stderr,
-				"trec_eval.get_results: Cannot read results file '%s'\n",
+				"rec_eval.get_results: Cannot read results file '%s'\n",
 				text_results_file);
 		return (UNDEF);
 	}
 	if (NULL == (trec_results_buf = malloc((size_t) size + 2))) {
 		fprintf(stderr,
-				"trec_eval.get_results: Cannot copy results file '%s'\n",
+				"rec_eval.get_results: Cannot copy results file '%s'\n",
 				text_results_file);
 		return (UNDEF);
 	}
 	(void) memcpy(trec_results_buf, orig_buf, size);
 	if (-1 == munmap(orig_buf, size) || -1 == close(fd)) {
 		fprintf(stderr,
-				"trec_eval.get_results: Cannot close results file '%s'\n",
+				"rec_eval.get_results: Cannot close results file '%s'\n",
 				text_results_file);
 		return (UNDEF);
 	}
@@ -120,7 +120,7 @@ int te_get_trec_results(EPI *epi, char *text_results_file,
 		if (UNDEF
 				== parse_results_line(&ptr, &line_ptr->qid, &line_ptr->docno,
 						&line_ptr->sim, &run_id_ptr)) {
-			fprintf(stderr, "trec_eval.get_results: Malformed line %ld\n",
+			fprintf(stderr, "rec_eval.get_results: Malformed line %ld\n",
 					(long) (line_ptr - lines + 1));
 			return (UNDEF);
 		}

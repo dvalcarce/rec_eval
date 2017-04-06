@@ -75,7 +75,7 @@ static int te_calc_avg_num_rel(const EPI *epi, const TREC_MEAS *tm,
 			}
 		} else {
 			fprintf(stderr,
-					"trec_eval: m_num_rel: rel_info format not qrels or qrels_jg\n");
+					"rec_eval: m_num_rel: rel_info format not qrels or qrels_jg\n");
 			return (UNDEF);
 		}
 	}

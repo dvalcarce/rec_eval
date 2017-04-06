@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -51,7 +51,7 @@ static int te_calc_11ptavg(const EPI *epi, const REL_INFO *rel_info,
 	double sum = 0.0;
 
 	if (0 == tm->meas_params->num_params) {
-		fprintf(stderr, "trec_eval.calc_m_11ptavg: No cutoff values\n");
+		fprintf(stderr, "rec_eval.calc_m_11ptavg: No cutoff values\n");
 		return (UNDEF);
 	}
 
@@ -59,7 +59,7 @@ static int te_calc_11ptavg(const EPI *epi, const REL_INFO *rel_info,
 		return (UNDEF);
 
 	/* translate percentage of rels as given in the measure params, to
-	 an actual cutoff number of docs.  Note addition of 0.9 
+	 an actual cutoff number of docs.  Note addition of 0.9
 	 means the default 11 percentages should have same cutoffs as
 	 historical MAP implementations (eg, old trec_eval) */
 	if (NULL == (cutoffs = Malloc(tm->meas_params->num_params, long)))

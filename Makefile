@@ -6,7 +6,7 @@ BIN = /usr/local/bin
 
 H   = .
 
-VERSIONID = 10.0.2
+VERSIONID = 10.0.3
 
 # gcc
 CC       = gcc
@@ -95,43 +95,43 @@ SRCH = common.h trec_eval.h sysfunc.h functions.h trec_format.h
 
 SRCOTHER = README Makefile test bpref_bug CHANGELOG
 
-trec_eval: $(SRCS) Makefile $(SRCH)
-	$(CC) $(CFLAGS)  -o trec_eval $(SRCS) -lm
+rec_eval: $(SRCS) Makefile $(SRCH)
+	$(CC) $(CFLAGS)  -o rec_eval $(SRCS) -lm
 
-install: $(BIN)/trec_eval
+install: $(BIN)/rec_eval
 
-quicktest: trec_eval
-	./trec_eval test/qrels.test test/results.test | diff - test/out.test
-	./trec_eval -m all_trec test/qrels.test test/results.test | diff - test/out.test.a
-	./trec_eval -m all_trec -q test/qrels.test test/results.test | diff - test/out.test.aq
-	./trec_eval -m all_trec -q -c test/qrels.test test/results.trunc | diff - test/out.test.aqc
-	./trec_eval -m all_trec -q -c -M100 test/qrels.test test/results.trunc | diff - test/out.test.aqcM
-	./trec_eval -m all_trec -mrelstring.20 -q -l2 test/qrels.rel_level test/results.test | diff - test/out.test.aql
-	./trec_eval -m all_prefs -q -R prefs test/prefs.test test/prefs.results.test | diff - test/out.test.prefs
-	./trec_eval -m all_prefs -q -R qrels_prefs test/qrels.test test/results.test | diff - test/out.test.qrels_prefs
-	./trec_eval -m qrels_jg -q -R qrels_jg  test/qrels.123 test/results.test | diff - test/out.test.qrels_jg
-	./trec_eval -q -miprec_at_recall..10,.20,.25,.75,.50 -m P.5,7,3 -m recall.20,2000 -m Rprec_mult.5.0,0.2,0.35 -mutility.2,-1,0,0 -m 11pt_avg..25,.5,.75 -mndcg.1=3,2=9,4=4.5 -mndcg_cut.10,20,23.4 -msuccess.2,5,20 test/qrels.test test/results.test | diff - test/out.test.meas_params
-	./trec_eval -q -m all_trec -Z test/zscores_file test/qrels.test test/results.test | diff - test/out.test.aqZ
+quicktest: rec_eval
+	./rec_eval test/qrels.test test/results.test | diff - test/out.test
+	./rec_eval -m all_trec test/qrels.test test/results.test | diff - test/out.test.a
+	./rec_eval -m all_trec -q test/qrels.test test/results.test | diff - test/out.test.aq
+	./rec_eval -m all_trec -q -c test/qrels.test test/results.trunc | diff - test/out.test.aqc
+	./rec_eval -m all_trec -q -c -M100 test/qrels.test test/results.trunc | diff - test/out.test.aqcM
+	./rec_eval -m all_trec -mrelstring.20 -q -l2 test/qrels.rel_level test/results.test | diff - test/out.test.aql
+	./rec_eval -m all_prefs -q -R prefs test/prefs.test test/prefs.results.test | diff - test/out.test.prefs
+	./rec_eval -m all_prefs -q -R qrels_prefs test/qrels.test test/results.test | diff - test/out.test.qrels_prefs
+	./rec_eval -m qrels_jg -q -R qrels_jg  test/qrels.123 test/results.test | diff - test/out.test.qrels_jg
+	./rec_eval -q -miprec_at_recall..10,.20,.25,.75,.50 -m P.5,7,3 -m recall.20,2000 -m Rprec_mult.5.0,0.2,0.35 -mutility.2,-1,0,0 -m 11pt_avg..25,.5,.75 -mndcg.1=3,2=9,4=4.5 -mndcg_cut.10,20,23.4 -msuccess.2,5,20 test/qrels.test test/results.test | diff - test/out.test.meas_params
+	./rec_eval -q -m all_trec -Z test/zscores_file test/qrels.test test/results.test | diff - test/out.test.aqZ
 	/bin/echo "Test succeeeded"
 
-longtest: trec_eval
+longtest: rec_eval
 	/bin/rm -rf test.long; mkdir test.long
-	./trec_eval test/qrels.test test/results.test > test.long/out.test
-	./trec_eval -m all_trec test/qrels.test test/results.test > test.long/out.test.a
-	./trec_eval -m all_trec -q test/qrels.test test/results.test > test.long/out.test.aq
-	./trec_eval -m all_trec -q -c test/qrels.test test/results.trunc > test.long/out.test.aqc
-	./trec_eval -m all_trec -q -c -M100 test/qrels.test test/results.trunc > test.long/out.test.aqcM
-	./trec_eval -m all_trec -mrelstring.20 -q -l2 test/qrels.rel_level test/results.test > test.long/out.test.aql
-	./trec_eval -m all_prefs -q -R prefs test/prefs.test test/prefs.results.test > test.long/out.test.prefs
-	./trec_eval -m all_prefs -q -R qrels_prefs test/qrels.test test/results.test > test.long/out.test.qrels_prefs
-	./trec_eval -m qrels_jg -q -R qrels_jg  test/qrels.123 test/results.test > test.long/out.test.qrels_jg
-	./trec_eval -q -miprec_at_recall..10,.20,.25,.75,.50 -m P.5,7,3 -m recall.20,2000 -m Rprec_mult.5.0,0.2,0.35 -mutility.2,-1,0,0 -m 11pt_avg..25,.5,.75 -mndcg.1=3,2=9,4=4.5 -mndcg_cut.10,20,23.4 -msuccess.2,5,20 test/qrels.test test/results.test > test.long/out.test.meas_params
-	./trec_eval -q -m all_trec -Z test/zscores_file test/qrels.test test/results.test > test.long/out.test.aqZ
+	./rec_eval test/qrels.test test/results.test > test.long/out.test
+	./rec_eval -m all_trec test/qrels.test test/results.test > test.long/out.test.a
+	./rec_eval -m all_trec -q test/qrels.test test/results.test > test.long/out.test.aq
+	./rec_eval -m all_trec -q -c test/qrels.test test/results.trunc > test.long/out.test.aqc
+	./rec_eval -m all_trec -q -c -M100 test/qrels.test test/results.trunc > test.long/out.test.aqcM
+	./rec_eval -m all_trec -mrelstring.20 -q -l2 test/qrels.rel_level test/results.test > test.long/out.test.aql
+	./rec_eval -m all_prefs -q -R prefs test/prefs.test test/prefs.results.test > test.long/out.test.prefs
+	./rec_eval -m all_prefs -q -R qrels_prefs test/qrels.test test/results.test > test.long/out.test.qrels_prefs
+	./rec_eval -m qrels_jg -q -R qrels_jg  test/qrels.123 test/results.test > test.long/out.test.qrels_jg
+	./rec_eval -q -miprec_at_recall..10,.20,.25,.75,.50 -m P.5,7,3 -m recall.20,2000 -m Rprec_mult.5.0,0.2,0.35 -mutility.2,-1,0,0 -m 11pt_avg..25,.5,.75 -mndcg.1=3,2=9,4=4.5 -mndcg_cut.10,20,23.4 -msuccess.2,5,20 test/qrels.test test/results.test > test.long/out.test.meas_params
+	./rec_eval -q -m all_trec -Z test/zscores_file test/qrels.test test/results.test > test.long/out.test.aqZ
 	diff test.long test
 
-$(BIN)/trec_eval: trec_eval
+$(BIN)/rec_eval: rec_eval
 	if [ -f $@ ]; then $(INSTALL) $@ $@.old; fi;
-	$(INSTALL) trec_eval $@
+	$(INSTALL) rec_eval $@
 
 ##4##########################################################################
 ##5##########################################################################
@@ -143,13 +143,13 @@ $(BIN)/trec_eval: trec_eval
 # Odds and ends                                                         #
 #########################################################################
 clean semiclean:
-	/bin/rm -f *.o *.BAK *~ trec_eval trec_eval.*.tar out.trec_eval Makefile.bak
+	/bin/rm -f *.o *.BAK *~ *rec_eval *rec_eval.*.tar out.*rec_eval Makefile.bak
 
 tar:
-	-/bin/rm -rf ./trec_eval.$(VERSIONID)
-	mkdir trec_eval.$(VERSIONID)
-	cp -rp $(SRCOTHER) $(SRCS) $(SRCH) trec_eval.$(VERSIONID)
-	tar cf - ./trec_eval.$(VERSIONID) > trec_eval.$(VERSIONID).tar
+	-/bin/rm -rf ./rec_eval.$(VERSIONID)
+	mkdir rec_eval.$(VERSIONID)
+	cp -rp $(SRCOTHER) $(SRCS) $(SRCH) rec_eval.$(VERSIONID)
+	tar cf - ./rec_eval.$(VERSIONID) > rec_eval.$(VERSIONID).tar
 
 #########################################################################
 # Determining program dependencies                                      #
