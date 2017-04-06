@@ -1,7 +1,7 @@
-# my_trec_eval
-Modified version of trec_eval [1]  with more metrics (recsys-oriented)
+# rec_eval
+Fork of trec_eval [1]. This modified version include more metrics (such as ERR, RMSE or MAE) or variants (such as nDCG and infAP). This fork focus on recommender systems evaluation.
 
-[1] http://trec.nist.gov/trec_eval/
+[1] https://github.com/usnistgov/trec_eval
 
 ## Author
 Daniel Valcarce  
