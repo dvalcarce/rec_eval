@@ -1,8 +1,9 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -47,7 +48,7 @@ static int te_calc_bpref(const EPI *epi, const REL_INFO *rel_info,
 
 	/* Calculate judgement based measures (dependent on only
 	 judged docs; no assumption of non-relevance if not judged) */
-	/* Binary Preference measures; here expressed as all docs with a higher 
+	/* Binary Preference measures; here expressed as all docs with a higher
 	 value of rel are to be preferred.  Optimize by keeping track of nonrel
 	 seen so far */
 	nonrel_so_far = 0;

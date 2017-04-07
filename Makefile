@@ -6,7 +6,7 @@ BIN = /usr/local/bin
 
 H   = .
 
-VERSIONID = 10.0.3
+VERSIONID = 10.0.4
 
 # gcc
 CC       = gcc
@@ -54,6 +54,7 @@ MEAS_SRCS =  measures.c \
 		m_ndcg2_cut.c \
 		m_ndcg45.c \
 		m_ndcg45_cut.c \
+		m_q_measure.c \
 		m_binG.c \
 		m_G.c \
 		m_rel_P.c \

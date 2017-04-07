@@ -55,9 +55,8 @@ static int te_calc_ndcg2_cut(const EPI *epi, const REL_INFO *rel_info,
 			if (epi->debug_level > 0)
 				printf("ndcg2_cut: cutoff %ld dcg %6.4f\n", i, sum);
 		}
-		gain = res_rels.results_rel_list[i];
+		gain = pow(2.0, res_rels.results_rel_list[i]);
 		if (gain > 0) {
-			gain = pow(2.0, gain);
 			/* Note: i+2 since doc i has rank i+1 */
 			sum += gain / log2((double) (i + 2));
 			if (epi->debug_level > 1)
