@@ -19,15 +19,9 @@ te_calc_infap2(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 /* See trec_eval.h for definition of TREC_MEAS */
 TREC_MEAS te_meas_infAP2 =
 		{ "infAP2",
-				"    Inferred AP (modified) \n\
-    A measure that allows sampling of judgement pool: Qrels/results divided\n\
-    into unpooled, pooled_but_unjudged, pooled_judged_rel,pooled_judged_nonrel.\n\
-    My intuition of infAP:\n\
-    Assume a judgment pool with a random subset that has been judged.\n\
-    Calculate P at rel doc using only the judged higher retrieved docs,\n\
-    then average in 0's from higher docs that were not in the judgment pool.\n\
-    (Those in the pool but not judged are ignored, since they are assumed\n\
-    to be relevant in the same proportion as those judged.)\n\
+				"    Inferred AP 2 (modified) \n\
+    A measure that allows sampling of judgements: Qrels/results divided\n\
+    into unjudged, judged_rel and pooled_judged_nonrel.\n\
     Cite:    'Estimating Average Precision with Incomplete and Imperfect\n\
     Judgments', Emine Yilmaz and Javed A. Aslam. CIKM \n",
 				te_init_meas_s_float, te_calc_infap2, te_acc_meas_s,
