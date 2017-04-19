@@ -1,13 +1,15 @@
 ------------------------------------------------------------------------------
 Change Log  (only recent)
 ------------------------------------------------------------------------------
-4/7/17 Version 10.0.4
-       Add Q-measure.
-4/6/17 Version 10.0.3
+4/19/17 Version 10.5
+       Fix err and add err45.
+4/7/17 Version 10.4
+       Add Q-measure: qm, qm45, qm_cut and qm45_cut.
+4/6/17 Version 10.3
        Add nDCG45 and nDCG45@n measures.
-4/5/17 Version 10.0.2
+4/5/17 Version 10.2
        Add infAP2 measure.
-4/4/17  Version 10.0.1
+4/4/17  Version 10.1
 	   Update 10.0.0 with sources from 9.0.4.
 6/22/16 Version 10.0
 	   First release of rec_eval fork based on trec_eval 9.0. The

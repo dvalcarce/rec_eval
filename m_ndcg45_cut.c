@@ -101,8 +101,7 @@ static int te_calc_ndcg45_cut(const EPI *epi, const REL_INFO *rel_info,
 			if (++cutoff_index == tm->meas_params->num_params)
 				break;
 		}
-		gain = get_gain(cur_lvl);
-		if (gain == 0.0) {
+		if ((gain = get_gain(cur_lvl)) == 0.0) {
 			break;
 		}
 		ideal_dcg += gain / (double) log2((double) (i + 2));

@@ -6,7 +6,7 @@ BIN = /usr/local/bin
 
 H   = .
 
-VERSIONID = 10.0.4
+VERSIONID = 10.5
 
 # gcc
 CC       = gcc
@@ -35,18 +35,19 @@ MEAS_SRCS =  measures.c \
 		m_num_q.c \
 		m_num_ret.c \
 		m_num_rel.c \
-        m_num_rel_ret.c \
+		m_num_rel_ret.c \
 		m_gm_map.c \
 		m_Rprec.c \
 		m_recip_rank.c \
 		m_err.c \
+		m_err45.c \
 		m_bpref.c \
 		m_iprec_at_recall.c \
 		m_recall.c \
 		m_Rprec_mult.c \
 		m_utility.c \
 		m_11pt_avg.c \
-        m_ndcg.c \
+		m_ndcg.c \
 		m_ndcg_cut.c \
 		m_Rndcg.c \
 		m_ndcg_rel.c \
@@ -54,7 +55,10 @@ MEAS_SRCS =  measures.c \
 		m_ndcg2_cut.c \
 		m_ndcg45.c \
 		m_ndcg45_cut.c \
-		m_q_measure.c \
+		m_qm.c \
+		m_qm_cut.c \
+		m_qm45.c \
+		m_qm45_cut.c \
 		m_binG.c \
 		m_G.c \
 		m_rel_P.c \
@@ -65,29 +69,29 @@ MEAS_SRCS =  measures.c \
 		m_gm_bpref.c \
 		m_runid.c \
 		m_relstring.c \
-        m_set_P.c \
+		m_set_P.c \
 		m_set_recall.c \
 		m_set_rel_P.c \
 		m_set_map.c \
 		m_set_F.c \
-        m_num_nonrel_judged_ret.c \
+		m_num_nonrel_judged_ret.c \
 		m_prefs_num_prefs_poss.c \
-        m_prefs_num_prefs_ful.c \
-        m_prefs_num_prefs_ful_ret.c \
+		m_prefs_num_prefs_ful.c \
+		m_prefs_num_prefs_ful_ret.c \
 		m_prefs_simp.c \
 		m_prefs_pair.c \
 		m_prefs_avgjg.c \
 		m_prefs_avgjg_Rnonrel.c \
 		m_prefs_simp_ret.c \
 		m_prefs_pair_ret.c m_prefs_avgjg_ret.c \
-        m_prefs_avgjg_Rnonrel_ret.c \
+		m_prefs_avgjg_Rnonrel_ret.c \
 		m_prefs_simp_imp.c \
 		m_prefs_pair_imp.c m_prefs_avgjg_imp.c \
-        m_map_avgjg.c \
+		m_map_avgjg.c \
 		m_Rprec_mult_avgjg.c \
 		m_P_avgjg.c \
 		m_yaap.c \
-        m_rmse.c \
+		m_rmse.c \
 		m_mae.c
 
 SRCS = $(TOP_SRCS) $(FORMAT_SRCS) $(MEAS_SRCS)

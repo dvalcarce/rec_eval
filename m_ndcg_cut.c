@@ -55,25 +55,29 @@ static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 			/* Calculate previous cutoff threshold.
 			 Note i guaranteed to be positive by init_meas */
 			eval->values[tm->eval_index + cutoff_index].value = sum;
-			if (++cutoff_index == tm->meas_params->num_params)
+			if (++cutoff_index == tm->meas_params->num_params) {
 				break;
-			if (epi->debug_level > 0)
+			}
+			if (epi->debug_level > 0) {
 				printf("ndcg_cut: cutoff %ld dcg %6.4f\n", i, sum);
+			}
 		}
 		gain = res_rels.results_rel_list[i];
 		if (gain > 0) {
 			/* Note: i+2 since doc i has rank i+1 */
 			sum += gain / log2((double) (i + 2));
-			if (epi->debug_level > 1)
+			if (epi->debug_level > 1) {
 				printf("ndcg_cut:%ld %3.1f %6.4f\n", i, gain, sum);
+			}
 		}
 	}
 	/* calculate values for those cutoffs not achieved */
 	while (cutoff_index < tm->meas_params->num_params) {
 		eval->values[tm->eval_index + cutoff_index].value = sum;
-		if (epi->debug_level > 0)
+		if (epi->debug_level > 0) {
 			printf("ndcg_cut: cutoff %ld dcg %6.4f\n", cutoffs[cutoff_index],
 					sum);
+		}
 		cutoff_index++;
 	}
 	/* Calculate ideal discounted cumulative gain for this topic, and
@@ -88,9 +92,9 @@ static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 			cur_lvl--;
 			lvl_count = 1;
 		}
-		if (cur_lvl == 0)
+		if (cur_lvl == 0) {
 			break;
-
+		}
 		if (i == cutoffs[cutoff_index]) {
 			/* Calculate previous cutoff threshold.
 			 Note i guaranteed to be positive by init_meas */

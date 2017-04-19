@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -28,8 +28,7 @@ TREC_MEAS te_meas_set_P =
     50 docs retrieved\n",
 				te_init_meas_s_float, te_calc_set_P, te_acc_meas_s,
 				te_calc_avg_meas_s, te_print_single_meas_s_float,
-				te_print_final_meas_s_float,
-				NULL, -1 };
+				te_print_final_meas_s_float, NULL, -1 };
 
 static int te_calc_set_P(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval) {

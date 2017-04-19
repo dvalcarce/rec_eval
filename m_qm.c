@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2008 - Chris Buckley.
+ Copyright (c) 2017 - Daniel Valcarce.
 
  Permission is granted for use and modification of this file for
  research, non-commercial purposes.
@@ -10,31 +10,31 @@
 #include "trec_eval.h"
 #include "functions.h"
 #include "trec_format.h"
-double log2(double x);
 
 static int
-te_calc_ndcg(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
+te_calc_qm(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 		const TREC_MEAS *tm, TREC_EVAL *eval);
-static PARAMS default_ndcg_gains = { NULL, 0, NULL };
+static PARAMS default_qm_gains = { NULL, 0, NULL };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_ndcg =
-		{ "ndcg",
-				"    Normalized Discounted Cumulative Gain\n\
-    Compute a traditional nDCG measure according to Jarvelin and\n\
-    Kekalainen (ACM ToIS v. 20, pp. 422-446, 2002)\n\
+TREC_MEAS te_meas_qm =
+		{ "qm",
+				"    Q-measure.\n\
     Gain values are set to the appropriate relevance level by default.  \n\
     The default gain can be overridden on the command line by having \n\
     comma separated parameters 'rel_level=gain'.\n\
-    Eg, 'trec_eval -m ndcg.1=3.5,2=9.0,4=7.0 ...'\n\
+    Eg, 'trec_eval -m qm.1=3.5,2=9.0,4=7.0 ...'\n\
     will give gains 3.5, 9.0, 3.0, 7.0 for relevance levels 1,2,3,4\n\
     respectively (level 3 remains at the default).\n\
     Gains are allowed to be 0 or negative, and relevance level 0\n\
     can be given a gain.\n\
-    Based on an implementation by Ian Soboroff\n",
-				te_init_meas_s_float_p_pair, te_calc_ndcg, te_acc_meas_s,
+	Cite:  Tetsuya Sakai and Noriko Kando: On information retrieval metrics\n\
+	designed for evaluation with incomplete relevance assessments. In\n\
+	Information	Retrieval 11, 5 (2008), 447-470.\n\
+	DOI=http://dx.doi.org/10.1007/s10791-008-9059-7\n",
+				te_init_meas_s_float_p_pair, te_calc_qm, te_acc_meas_s,
 				te_calc_avg_meas_s, te_print_single_meas_s_float,
-				te_print_final_meas_s_float_p, &default_ndcg_gains, -1 };
+				te_print_final_meas_s_float_p, &default_qm_gains, -1 };
 
 /* Keep track of valid rel_levels and associated gains */
 /* Initialized in setup_gains */
@@ -55,15 +55,20 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 static double get_gain(const long rel_level, const GAINS *gains);
 static int comp_rel_gain();
 
-static int te_calc_ndcg(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_qm(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval) {
 
 	RES_RELS res_rels;
-	double results_gain, results_dcg;
-	double ideal_gain, ideal_dcg;
-	long cur_lvl, lvl_count;
 	long i;
+	long rel_so_far = 0;
+	long cur_lvl, lvl_count = 0;
+	double q_measure = 0.0;
+	double cg = 0.0;
 	GAINS gains;
+	double *cgi;
+	double max_cgi;
+	long total = 0.0;
+	double gain;
 
 	if (UNDEF == te_form_res_rels(epi, rel_info, results, &res_rels)) {
 		return (UNDEF);
@@ -73,69 +78,54 @@ static int te_calc_ndcg(const EPI *epi, const REL_INFO *rel_info,
 		return (UNDEF);
 	}
 
-	results_dcg = 0.0;
-	ideal_dcg = 0.0;
-	cur_lvl = gains.num_gains - 1;
-	ideal_gain = (cur_lvl >= 0) ? gains.rel_gains[cur_lvl].gain : 0.0;
+	for (i = 0; i < res_rels.num_rel_levels; i++) {
+		if (get_gain(i, &gains) > 0.0) {
+			total += res_rels.rel_levels[i];
+		}
+	}
+
+	if (!total) {
+		eval->values[tm->eval_index].value = 0.0;
+		Free(gains.rel_gains);
+		return (1);
+	}
+
+	/* Precompute ideal cumulative gains (cgi) at each position */
+	if ((cgi = (double *) calloc(total, sizeof(double))) == NULL) {
+		fprintf(stderr, "qm: Not enough memory");
+		return (UNDEF);
+	}
 	lvl_count = 0;
-
-	for (i = 0; i < res_rels.num_ret && ideal_gain > 0.0; i++) {
-		/* Calculate change in results dcg */
-		results_gain = get_gain(res_rels.results_rel_list[i], &gains);
-		if (results_gain != 0) {
-			/* Note: i+2 since doc i has rank i+1 */
-			results_dcg += results_gain / log2((double) (i + 2));
-		}
-		/* Calculate change in ideal dcg */
+	cur_lvl = res_rels.num_rel_levels - 1;
+	for (i = 0; 1; i++) {
 		lvl_count++;
-		while (cur_lvl >= 0 && lvl_count > gains.rel_gains[cur_lvl].num_at_level) {
+		while (cur_lvl > 0 && lvl_count > gains.rel_gains[cur_lvl].num_at_level) {
 			lvl_count = 1;
 			cur_lvl--;
-			ideal_gain = (cur_lvl >= 0) ? gains.rel_gains[cur_lvl].gain : 0.0;
 		}
-		if (ideal_gain > 0.0) {
-			ideal_dcg += ideal_gain / log2((double) (i + 2));
+		if ((gain = gains.rel_gains[cur_lvl].gain) == 0) {
+			break;
 		}
-		if (epi->debug_level > 0) {
-			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_lvl,
-					results_gain, results_dcg, ideal_gain, ideal_dcg);
+		cgi[i] = gain;
+		if (i > 0) {
+			cgi[i] += cgi[i - 1];
 		}
 	}
-	while (i < res_rels.num_ret) {
-		/* Calculate change in results dcg */
-		results_gain = get_gain(res_rels.results_rel_list[i], &gains);
-		if (results_gain != 0) {
-			results_dcg += results_gain / log2((double) (i + 2));
+	max_cgi = cgi[total - 1];
+
+	/* Compute Q-measure */
+	for (i = 0; i < res_rels.num_ret; i++) {
+		if ((gain = get_gain(res_rels.results_rel_list[i], &gains)) > 0.0) {
+			rel_so_far++;
+			cg += gain;
+			q_measure += (cg + rel_so_far)
+					/ (i + 1 + (i >= total ? max_cgi : cgi[i]));
 		}
-		if (epi->debug_level > 0) {
-			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_lvl,
-					results_gain, results_dcg, 0.0, ideal_dcg);
-		}
-		i++;
-	}
-	while (ideal_gain > 0.0) {
-		/* Calculate change in ideal dcg */
-		lvl_count++;
-		while (cur_lvl >= 0 && lvl_count > gains.rel_gains[cur_lvl].num_at_level) {
-			lvl_count = 1;
-			cur_lvl--;
-			ideal_gain = (cur_lvl >= 0) ? gains.rel_gains[cur_lvl].gain : 0.0;
-		}
-		if (ideal_gain > 0.0) {
-			ideal_dcg += ideal_gain / log2((double) (i + 2));
-		}
-		if (epi->debug_level > 0) {
-			printf("ndcg: %ld %ld %3.1f %6.4f %3.1f %6.4f\n", i, cur_lvl, 0.0,
-					results_dcg, ideal_gain, ideal_dcg);
-		}
-		i++;
 	}
 
-	/* Compare sum to ideal NDCG */
-	if (ideal_dcg > 0.0) {
-		eval->values[tm->eval_index].value = results_dcg / ideal_dcg;
-	}
+	eval->values[tm->eval_index].value = q_measure / (double) total;
 
+	free(cgi);
 	Free(gains.rel_gains);
 
 	return (1);

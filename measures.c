@@ -69,6 +69,7 @@ extern TREC_MEAS te_meas_Rprec;
 extern TREC_MEAS te_meas_bpref;
 extern TREC_MEAS te_meas_recip_rank;
 extern TREC_MEAS te_meas_err;
+extern TREC_MEAS te_meas_err45;
 extern TREC_MEAS te_meas_iprec_at_recall;
 extern TREC_MEAS te_meas_P;
 extern TREC_MEAS te_meas_relstring;
@@ -82,14 +83,17 @@ extern TREC_MEAS te_meas_11pt_avg;
 extern TREC_MEAS te_meas_binG;
 extern TREC_MEAS te_meas_G;
 extern TREC_MEAS te_meas_ndcg;
+extern TREC_MEAS te_meas_ndcg_cut;
 extern TREC_MEAS te_meas_ndcg2;
-extern TREC_MEAS te_meas_ndcg45;
+extern TREC_MEAS te_meas_ndcg2_cut;
 extern TREC_MEAS te_meas_ndcg_rel;
 extern TREC_MEAS te_meas_Rndcg;
-extern TREC_MEAS te_meas_ndcg_cut;
-extern TREC_MEAS te_meas_ndcg2_cut;
+extern TREC_MEAS te_meas_ndcg45;
 extern TREC_MEAS te_meas_ndcg45_cut;
-extern TREC_MEAS te_meas_q_measure;
+extern TREC_MEAS te_meas_qm;
+extern TREC_MEAS te_meas_qm_cut;
+extern TREC_MEAS te_meas_qm45;
+extern TREC_MEAS te_meas_qm45_cut;
 extern TREC_MEAS te_meas_map_cut;
 extern TREC_MEAS te_meas_relative_P;
 extern TREC_MEAS te_meas_success;
@@ -123,13 +127,14 @@ extern TREC_MEAS te_meas_mae;
 TREC_MEAS *te_trec_measures[] = { &te_meas_runid, &te_meas_num_q,
 		&te_meas_num_ret, &te_meas_num_rel, &te_meas_num_rel_ret, &te_meas_map,
 		&te_meas_gm_map, &te_meas_Rprec, &te_meas_bpref, &te_meas_recip_rank,
-		&te_meas_err, &te_meas_iprec_at_recall, &te_meas_P, &te_meas_relstring,
-		&te_meas_recall, &te_meas_infAP, &te_meas_infAP2, &te_meas_gm_bpref,
-		&te_meas_Rprec_mult, &te_meas_utility, &te_meas_11pt_avg, &te_meas_binG,
-		&te_meas_G, &te_meas_ndcg, &te_meas_ndcg2, &te_meas_ndcg_rel,
-		&te_meas_Rndcg, &te_meas_ndcg_cut, &te_meas_ndcg2_cut, &te_meas_ndcg45,
-		&te_meas_ndcg45_cut, &te_meas_q_measure, &te_meas_map_cut,
-		&te_meas_relative_P, &te_meas_success, &te_meas_set_P,
+		&te_meas_err, &te_meas_err45, &te_meas_iprec_at_recall, &te_meas_P,
+		&te_meas_relstring, &te_meas_recall, &te_meas_infAP, &te_meas_infAP2,
+		&te_meas_gm_bpref, &te_meas_Rprec_mult, &te_meas_utility,
+		&te_meas_11pt_avg, &te_meas_binG, &te_meas_G, &te_meas_ndcg,
+		&te_meas_ndcg_cut, &te_meas_ndcg2, &te_meas_ndcg2_cut,
+		&te_meas_ndcg_rel, &te_meas_Rndcg, &te_meas_ndcg45, &te_meas_ndcg45_cut,
+		&te_meas_qm, &te_meas_qm_cut, &te_meas_qm45, &te_meas_qm45_cut,
+		&te_meas_map_cut, &te_meas_relative_P, &te_meas_success, &te_meas_set_P,
 		&te_meas_set_relative_P, &te_meas_set_recall, &te_meas_set_map,
 		&te_meas_set_F, &te_meas_num_nonrel_judged_ret,
 		&te_meas_prefs_num_prefs_poss, &te_meas_prefs_num_prefs_ful,
@@ -152,37 +157,32 @@ static char *trec_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"utility", "11pt_avg", "ndcg", "relative_P", "Rprec_mult", "success",
 		"map_cut", "ndcg_cut", "ndcg_rel", "Rndcg", "binG", "G", "set_P",
 		"set_recall", "set_relative_P", "set_map", "set_F",
-		"num_nonrel_judged_ret",
-		NULL };
+		"num_nonrel_judged_ret", NULL };
 static char *recsys_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"num_rel_ret", "map", "gm_map", "map_cut", "bpref", "gm_bpref",
-		"recip_rank", "err", "P", "recall", "infAP", "infAP2", "ndcg",
-		"ndcg_cut", "ndcg2", "ndcg2_cut", "ndcg45", "ndcg45_cut", "q_measure",
-		"set_P", "set_recall", "set_F", "rmse", "mae", "num_nonrel_judged_ret",
-		"yaap",
-		NULL };
+		"recip_rank", "err", "err45", "P", "recall", "infAP", "infAP2", "ndcg",
+		"ndcg_cut", "ndcg2", "ndcg2_cut", "ndcg45", "ndcg45_cut", "qm",
+		"qm_cut", "qm45", "qm45_cut", "set_P", "set_recall", "set_F", "rmse",
+		"mae", "num_nonrel_judged_ret", "yaap", NULL };
 static char *set_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"num_rel_ret", "utility", "set_P", "set_recall", "set_relative_P",
-		"set_map", "set_F",
-		NULL };
+		"set_map", "set_F", NULL };
 static char *prefs_names[] = { "runid", "num_q", "prefs_num_prefs_poss",
 		"prefs_num_prefs_ful", "prefs_num_prefs_ful_ret", "prefs_simp",
 		"prefs_pair", "prefs_avgjg", "prefs_avgjg_Rnonrel", "prefs_simp_ret",
 		"prefs_pair_ret", "prefs_avgjg_ret", "prefs_avgjg_Rnonrel_ret",
-		"prefs_simp_imp", "prefs_pair_imp", "prefs_avgjg_imp",
-		NULL };
+		"prefs_simp_imp", "prefs_pair_imp", "prefs_avgjg_imp", NULL };
 static char *prefs_off_name[] = { "runid", "num_q", "prefs_num_prefs_poss",
 		"prefs_num_prefs_ful", "prefs_num_prefs_ful_ret", "prefs_simp",
-		"prefs_pair", "prefs_avgjg",
-		NULL };
+		"prefs_pair", "prefs_avgjg", NULL };
 static char *qrels_jg_names[] = { "runid", "num_q", "map_avgjg", "P_avgjg",
-		"Rprec_mult_avgjg",
-		NULL };
+		"Rprec_mult_avgjg", NULL };
 
 TREC_MEASURE_NICKNAMES te_trec_measure_nicknames[] = {
 		{ "official", off_names }, { "set", set_names }, { "all_trec",
 				trec_names }, { "recsys", recsys_names }, { "all_prefs",
 				prefs_names }, { "prefs", prefs_off_name }, { "qrels_jg",
-				qrels_jg_names }, };
+				qrels_jg_names } };
+
 const long te_num_trec_measure_nicknames = sizeof(te_trec_measure_nicknames)
 		/ sizeof(te_trec_measure_nicknames[0]);

@@ -12,30 +12,23 @@
 #include "trec_format.h"
 
 static int
-te_calc_q_measure(const EPI *epi, const REL_INFO *rel_info,
-		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
-static PARAMS default_q_measure_gains = { NULL, 0, NULL };
+te_calc_qm45(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
+		const TREC_MEAS *tm, TREC_EVAL *eval);
+static PARAMS default_qm45_gains = { NULL, 0, NULL };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_q_measure =
-		{ "q_measure",
+TREC_MEAS te_meas_qm45 =
+		{ "qm45",
 				"    Q-measure.\n\
-    TODO.\n\
-    Gain values are set to the appropriate relevance level by default.  \n\
-    The default gain can be overridden on the command line by having \n\
-    comma separated parameters 'rel_level=gain'.\n\
-    Eg, 'trec_eval -m ndcg.1=3.5,2=9.0,4=7.0 ...'\n\
-    will give gains 3.5, 9.0, 3.0, 7.0 for relevance levels 1,2,3,4\n\
-    respectively (level 3 remains at the default).\n\
-    Gains are allowed to be 0 or negative, and relevance level 0\n\
-    can be given a gain.\n\
+    Gain values are 1 for relevance value 4 and 2 for relevance\n\
+	value 5 in the qrels file unless overrided.\n\
 	Cite:  Tetsuya Sakai and Noriko Kando: On information retrieval metrics\n\
 	designed for evaluation with incomplete relevance assessments. In\n\
 	Information	Retrieval 11, 5 (2008), 447-470.\n\
 	DOI=http://dx.doi.org/10.1007/s10791-008-9059-7\n",
-				te_init_meas_s_float_p_pair, te_calc_q_measure, te_acc_meas_s,
+				te_init_meas_s_float_p_pair, te_calc_qm45, te_acc_meas_s,
 				te_calc_avg_meas_s, te_print_single_meas_s_float,
-				te_print_final_meas_s_float_p, &default_q_measure_gains, -1 };
+				te_print_final_meas_s_float_p, &default_qm45_gains, -1 };
 
 /* Keep track of valid rel_levels and associated gains */
 /* Initialized in setup_gains */
@@ -55,8 +48,9 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 		GAINS *gains);
 static double get_gain(const long rel_level, const GAINS *gains);
 static int comp_rel_gain();
+static double compute_gain(const long rel_level);
 
-static int te_calc_q_measure(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_qm45(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval) {
 
 	RES_RELS res_rels;
@@ -64,9 +58,12 @@ static int te_calc_q_measure(const EPI *epi, const REL_INFO *rel_info,
 	long rel_so_far = 0;
 	long cur_lvl, lvl_count = 0;
 	double q_measure = 0.0;
-	double cum_gain = 0.0;
+	double cg = 0.0;
 	GAINS gains;
 	double *cgi;
+	double max_cgi;
+	long total = 0.0;
+	double gain;
 
 	if (UNDEF == te_form_res_rels(epi, rel_info, results, &res_rels)) {
 		return (UNDEF);
@@ -76,47 +73,62 @@ static int te_calc_q_measure(const EPI *epi, const REL_INFO *rel_info,
 		return (UNDEF);
 	}
 
+	for (i = 0; i < res_rels.num_rel_levels; i++) {
+		if (get_gain(i, &gains) > 0.0) {
+			total += res_rels.rel_levels[i];
+		}
+	}
+
+	if (!total) {
+		eval->values[tm->eval_index].value = 0.0;
+		Free(gains.rel_gains);
+		return (1);
+	}
+
 	/* Precompute ideal cumulative gains (cgi) at each position */
-	cgi = (double *) malloc(res_rels.num_rel * sizeof(double));
+	if ((cgi = (double *) calloc(total, sizeof(double))) == NULL) {
+		fprintf(stderr, "qm: Not enough memory");
+		return (UNDEF);
+	}
 	lvl_count = 0;
 	cur_lvl = res_rels.num_rel_levels - 1;
 	for (i = 0; 1; i++) {
 		lvl_count++;
-		while (cur_lvl > 0 && lvl_count > res_rels.rel_levels[cur_lvl]) {
-			cur_lvl--;
+		while (cur_lvl > 0 && lvl_count > gains.rel_gains[cur_lvl].num_at_level) {
 			lvl_count = 1;
+			cur_lvl--;
 		}
-		if (cur_lvl == 0) {
+		if ((gain = gains.rel_gains[cur_lvl].gain) == 0) {
 			break;
 		}
-		cgi[i] = get_gain(cur_lvl, &gains);
+		cgi[i] = gain;
 		if (i > 0) {
 			cgi[i] += cgi[i - 1];
 		}
 	}
+	max_cgi = cgi[total - 1];
 
 	/* Compute Q-measure */
 	for (i = 0; i < res_rels.num_ret; i++) {
-		if (res_rels.results_rel_list[i] >= epi->relevance_level) {
+		if ((gain = get_gain(res_rels.results_rel_list[i], &gains)) > 0.0) {
 			rel_so_far++;
-			cum_gain += get_gain(res_rels.results_rel_list[i], &gains);
-			q_measure += (double) (cum_gain + rel_so_far)
-					/ (double) (i + 1 + cgi[i]);
+			cg += gain;
+			q_measure += (cg + rel_so_far)
+					/ (i + 1 + (i >= total ? max_cgi : cgi[i]));
 		}
 	}
 
-	if (res_rels.num_rel) {
-		q_measure /= res_rels.num_rel;
-	}
+	eval->values[tm->eval_index].value = q_measure / (double) total;
 
 	free(cgi);
+	Free(gains.rel_gains);
 
-	eval->values[tm->eval_index].value = q_measure;
 	return (1);
 }
 
 static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 		GAINS *gains) {
+
 	FLOAT_PARAM_PAIR *pairs = NULL;
 	long num_pairs = 0;
 	long i, j;
@@ -127,10 +139,11 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 		num_pairs = tm->meas_params->num_params;
 	}
 
-	if (NULL
-			== (gains->rel_gains = Malloc(res_rels->num_rel_levels + num_pairs,
-					REL_GAIN)))
+	if ((gains->rel_gains = Malloc(res_rels->num_rel_levels + num_pairs,
+			REL_GAIN)) == NULL) {
 		return (UNDEF);
+	}
+
 	num_gains = 0;
 	for (i = 0; i < num_pairs; i++) {
 		gains->rel_gains[num_gains].rel_level = atol(pairs[i].name);
@@ -142,13 +155,13 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 	for (i = 0; i < res_rels->num_rel_levels; i++) {
 		for (j = 0; j < num_gains && gains->rel_gains[j].rel_level != i; j++)
 			;
-		if (j < num_gains)
+		if (j < num_gains) {
 			/* Was included in list of parameters. Update occurrence info */
 			gains->rel_gains[j].num_at_level = res_rels->rel_levels[i];
-		else {
+		} else {
 			/* Not included in list of parameters. New gain level */
 			gains->rel_gains[num_gains].rel_level = i;
-			gains->rel_gains[num_gains].gain = (double) i;
+			gains->rel_gains[num_gains].gain = compute_gain(i);
 			gains->rel_gains[num_gains].num_at_level = res_rels->rel_levels[i];
 			num_gains++;
 		}
@@ -159,8 +172,9 @@ static int setup_gains(const TREC_MEAS *tm, const RES_RELS *res_rels,
 			comp_rel_gain);
 
 	gains->total_num_at_levels = 0;
-	for (i = 0; i < num_gains; i++)
+	for (i = 0; i < num_gains; i++) {
 		gains->total_num_at_levels += gains->rel_gains[i].num_at_level;
+	}
 
 	gains->num_gains = num_gains;
 	return (1);
@@ -172,9 +186,22 @@ static int comp_rel_gain(REL_GAIN *ptr1, REL_GAIN *ptr2) {
 
 static double get_gain(const long rel_level, const GAINS *gains) {
 	long i;
-	for (i = 0; i < gains->num_gains; i++)
-		if (rel_level == gains->rel_gains[i].rel_level)
+	for (i = 0; i < gains->num_gains; i++) {
+		if (rel_level == gains->rel_gains[i].rel_level) {
 			return (gains->rel_gains[i].gain);
+		}
+	}
 	return (0.0); /* Print Error ?? */
+}
+
+static inline double compute_gain(const long rel_level) {
+	switch (rel_level) {
+	case 4:
+		return 1.0;
+	case 5:
+		return 2.0;
+	default:
+		return 0.0;
+	}
 }
 
