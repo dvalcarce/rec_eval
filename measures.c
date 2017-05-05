@@ -159,11 +159,11 @@ static char *trec_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"set_recall", "set_relative_P", "set_map", "set_F",
 		"num_nonrel_judged_ret", NULL };
 static char *recsys_names[] = { "runid", "num_q", "num_ret", "num_rel",
-		"num_rel_ret", "map", "gm_map", "map_cut", "bpref", "gm_bpref",
-		"recip_rank", "err", "err45", "P", "recall", "infAP", "infAP2", "ndcg",
-		"ndcg_cut", "ndcg2", "ndcg2_cut", "ndcg45", "ndcg45_cut", "qm",
-		"qm_cut", "qm45", "qm45_cut", "set_P", "set_recall", "set_F", "rmse",
-		"mae", "num_nonrel_judged_ret", "yaap", NULL };
+		"num_rel_ret", "map", "map_cut", "bpref", "recip_rank", "err", "err45",
+		"P", "recall", "infAP2", "ndcg", "ndcg_cut", "ndcg2", "ndcg2_cut",
+		"ndcg45", "ndcg45_cut", "qm", "qm_cut", "qm45", "qm45_cut", "set_P",
+		"set_recall", "set_F", "rmse", "mae", "num_nonrel_judged_ret", "yaap",
+		NULL };
 static char *set_names[] = { "runid", "num_q", "num_ret", "num_rel",
 		"num_rel_ret", "utility", "set_P", "set_recall", "set_relative_P",
 		"set_map", "set_F", NULL };
