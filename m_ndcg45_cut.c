@@ -15,9 +15,8 @@ double log2(double x);
 static int te_calc_ndcg45_cut(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
 static long long_cutoff_array[] = { 5, 10, 15, 20, 30, 100 };
-static PARAMS default_ndcg45_cutoffs = {
-NULL, sizeof(long_cutoff_array) / sizeof(long_cutoff_array[0]),
-		&long_cutoff_array[0] };
+static PARAMS default_ndcg45_cutoffs = { NULL, sizeof(long_cutoff_array)
+		/ sizeof(long_cutoff_array[0]), &long_cutoff_array[0] };
 static double get_gain(const long rel_level);
 
 /* See trec_eval.h for definition of TREC_MEAS */
@@ -45,8 +44,9 @@ static int te_calc_ndcg45_cut(const EPI *epi, const REL_INFO *rel_info,
 	long cur_lvl, lvl_count;
 	long i;
 
-	if (UNDEF == te_form_res_rels(epi, rel_info, results, &res_rels))
+	if (UNDEF == te_form_res_rels(epi, rel_info, results, &res_rels)) {
 		return (UNDEF);
+	}
 
 	sum = 0.0;
 	for (i = 0; i < res_rels.num_ret; i++) {
@@ -54,25 +54,29 @@ static int te_calc_ndcg45_cut(const EPI *epi, const REL_INFO *rel_info,
 			/* Calculate previous cutoff threshold.
 			 Note i guaranteed to be positive by init_meas */
 			eval->values[tm->eval_index + cutoff_index].value = sum;
-			if (++cutoff_index == tm->meas_params->num_params)
+			if (++cutoff_index == tm->meas_params->num_params) {
 				break;
-			if (epi->debug_level > 0)
+			}
+			if (epi->debug_level > 0) {
 				printf("ndcg45_cut: cutoff %ld dcg %6.4f\n", i, sum);
+			}
 		}
 		gain = get_gain(res_rels.results_rel_list[i]);
 		if (gain > 0) {
 			/* Note: i+2 since doc i has rank i+1 */
 			sum += gain / log2((double) (i + 2));
-			if (epi->debug_level > 1)
+			if (epi->debug_level > 1) {
 				printf("ndcg45_cut: %ld %3.1f %6.4f\n", i, gain, sum);
+			}
 		}
 	}
 	/* calculate values for those cutoffs not achieved */
 	while (cutoff_index < tm->meas_params->num_params) {
 		eval->values[tm->eval_index + cutoff_index].value = sum;
-		if (epi->debug_level > 0)
+		if (epi->debug_level > 0) {
 			printf("ndcg45_cut: cutoff %ld dcg %6.4f\n", cutoffs[cutoff_index],
 					sum);
+		}
 		cutoff_index++;
 	}
 	/* Calculate ideal discounted cumulative gain for this topic, and
@@ -90,29 +94,31 @@ static int te_calc_ndcg45_cut(const EPI *epi, const REL_INFO *rel_info,
 		if (cur_lvl == 0) {
 			break;
 		}
-
 		if (i == cutoffs[cutoff_index]) {
 			/* Calculate previous cutoff threshold.
 			 Note i guaranteed to be positive by init_meas */
-			if (ideal_dcg > 0.0)
+			if (ideal_dcg > 0.0) {
 				eval->values[tm->eval_index + cutoff_index].value /= ideal_dcg;
-			if (epi->debug_level > 0)
+			}
+			if (epi->debug_level > 0) {
 				printf("ndcg45_cut: cutoff %ld idcg %6.4f\n", i, ideal_dcg);
-			if (++cutoff_index == tm->meas_params->num_params)
+			}
+			if (++cutoff_index == tm->meas_params->num_params) {
 				break;
+			}
 		}
-		if ((gain = get_gain(cur_lvl)) == 0.0) {
-			break;
-		}
+		gain = get_gain(cur_lvl);
 		ideal_dcg += gain / (double) log2((double) (i + 2));
-		if (epi->debug_level > 0)
+		if (epi->debug_level > 0) {
 			printf("ndcg45_cut:%ld %3.1f %6.4f\n", i, gain, ideal_dcg);
+		}
 	}
 
 	/* calculate values for those cutoffs not achieved */
 	while (cutoff_index < tm->meas_params->num_params) {
-		if (ideal_dcg > 0.0)
+		if (ideal_dcg > 0.0) {
 			eval->values[tm->eval_index + cutoff_index].value /= ideal_dcg;
+		}
 		if (epi->debug_level > 0) {
 			printf("ndcg45_cut: cutoff %ld idcg %6.4f\n", cutoffs[cutoff_index],
 					ideal_dcg);

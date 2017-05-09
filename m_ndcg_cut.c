@@ -11,13 +11,11 @@
 #include "trec_format.h"
 double log2(double x);
 
-static int
-te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
 static long long_cutoff_array[] = { 5, 10, 15, 20, 30, 100 };
-static PARAMS default_ndcg_cutoffs = {
-NULL, sizeof(long_cutoff_array) / sizeof(long_cutoff_array[0]),
-		&long_cutoff_array[0] };
+static PARAMS default_ndcg_cutoffs = { NULL, sizeof(long_cutoff_array)
+		/ sizeof(long_cutoff_array[0]), &long_cutoff_array[0] };
 
 /* See trec_eval.h for definition of TREC_MEAS */
 TREC_MEAS te_meas_ndcg_cut =
@@ -46,8 +44,9 @@ static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 	long cur_lvl, lvl_count;
 	long i;
 
-	if (UNDEF == te_form_res_rels(epi, rel_info, results, &res_rels))
+	if (UNDEF == te_form_res_rels(epi, rel_info, results, &res_rels)) {
 		return (UNDEF);
+	}
 
 	sum = 0.0;
 	for (i = 0; i < res_rels.num_ret; i++) {
@@ -98,29 +97,35 @@ static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 		if (i == cutoffs[cutoff_index]) {
 			/* Calculate previous cutoff threshold.
 			 Note i guaranteed to be positive by init_meas */
-			if (ideal_dcg > 0.0)
+			if (ideal_dcg > 0.0) {
 				eval->values[tm->eval_index + cutoff_index].value /= ideal_dcg;
-			if (epi->debug_level > 0)
+			}
+			if (epi->debug_level > 0) {
 				printf("ndcg_cut: cutoff %ld idcg %6.4f\n", i, ideal_dcg);
-			if (++cutoff_index == tm->meas_params->num_params)
+			}
+			if (++cutoff_index == tm->meas_params->num_params) {
 				break;
+			}
 		}
 		gain = cur_lvl;
 		ideal_dcg += gain / (double) log2((double) (i + 2));
-		if (epi->debug_level > 0)
-			printf("ndcg_cut:%ld %ld %3.1f %6.4f\n", i, cur_lvl, gain,
-					ideal_dcg);
+		if (epi->debug_level > 0) {
+			printf("ndcg_cut:%ld %ld %3.1f %6.4f\n", i, cur_lvl, gain, ideal_dcg);
+		}
 	}
 
 	/* calculate values for those cutoffs not achieved */
 	while (cutoff_index < tm->meas_params->num_params) {
-		if (ideal_dcg > 0.0)
+		if (ideal_dcg > 0.0) {
 			eval->values[tm->eval_index + cutoff_index].value /= ideal_dcg;
-		if (epi->debug_level > 0)
+		}
+		if (epi->debug_level > 0) {
 			printf("ndcg_cut: cutoff %ld idcg %6.4f\n", cutoffs[cutoff_index],
 					ideal_dcg);
+		}
 		cutoff_index++;
 	}
 
 	return (1);
+
 }
