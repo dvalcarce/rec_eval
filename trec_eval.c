@@ -394,8 +394,7 @@ int main(argc, argv)
 				if (UNDEF
 						== te_trec_measures[m]->acc_meas(&epi,
 								te_trec_measures[m], &q_eval, &accum_eval)) {
-					fprintf(stderr,
-							"rec_eval: Can't accumulate measure '%s'\n",
+					fprintf(stderr, "rec_eval: Can't accumulate measure '%s'\n",
 							te_trec_measures[m]->name);
 					exit(5);
 				}

@@ -1,5 +1,6 @@
 /*
  Copyright (c) 2008 - Chris Buckley.
+ Copyright (c) 2019 - Daniel Valcarce.
 
  Permission is granted for use and modification of this file for
  research, non-commercial purposes.
@@ -11,36 +12,27 @@
 #include "trec_format.h"
 double log2(double x);
 
-static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_gm_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
 static long long_cutoff_array[] = { 5, 10, 15, 20, 30, 100 };
 static PARAMS default_ndcg_cutoffs = { NULL, sizeof(long_cutoff_array)
 		/ sizeof(long_cutoff_array[0]), &long_cutoff_array[0] };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_ndcg_cut =
-		{ "ndcg_cut",
-				"    Normalized Discounted Cumulative Gain at cutoffs.\n\
-    Compute a traditional nDCG measure according to Jarvelin and\n\
-    Kekalainen (ACM ToIS v. 20, pp. 422-446, 2002) at cutoffs.\n\
-    See comments for ndcg.\n\
-    Gain values are the relevance values in the qrels file.  For now, if you\n\
-    want different gains, change the qrels file appropriately.\n\
-    Cutoffs must be positive without duplicates\n\
-    Default params: -m ndcg_cut.5,10,15,20,30,100\n\
-    Based on an implementation by Ian Soboroff\n",
-				te_init_meas_a_float_cut_long, te_calc_ndcg_cut,
-				te_acc_meas_a_cut, te_calc_avg_meas_a_cut,
-				te_print_single_meas_a_cut, te_print_final_meas_a_cut,
-				(void *) &default_ndcg_cutoffs, -1 };
+TREC_MEAS te_meas_ndcg_cut = { "ndcg_cut",
+		"    NDCG using geometric mean over the topics.\n",
+		te_init_meas_a_float_cut_long, te_calc_gm_ndcg_cut, te_acc_meas_a_cut,
+		te_calc_avg_meas_a_cut, te_print_single_meas_empty,
+		te_print_final_meas_a_cut, (void *) &default_ndcg_cutoffs, -1 };
 
-static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
+static int te_calc_gm_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval) {
 	long *cutoffs = (long *) tm->meas_params->param_values;
 	long cutoff_index = 0;
 	RES_RELS res_rels;
 	double gain, sum;
 	double ideal_dcg; /* ideal discounted cumulative gain */
+	double ndcg;
 	long cur_lvl, lvl_count;
 	long i;
 
@@ -98,7 +90,10 @@ static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 			/* Calculate previous cutoff threshold.
 			 Note i guaranteed to be positive by init_meas */
 			if (ideal_dcg > 0.0) {
-				eval->values[tm->eval_index + cutoff_index].value /= ideal_dcg;
+				ndcg = eval->values[tm->eval_index + cutoff_index].value
+						/ ideal_dcg;
+				eval->values[tm->eval_index + cutoff_index].value =
+						(double) log((double) (MAX(ndcg, MIN_GEO_MEAN)));
 			}
 			if (epi->debug_level > 0) {
 				printf("ndcg_cut: cutoff %ld idcg %6.4f\n", i, ideal_dcg);
@@ -118,7 +113,10 @@ static int te_calc_ndcg_cut(const EPI *epi, const REL_INFO *rel_info,
 	/* calculate values for those cutoffs not achieved */
 	while (cutoff_index < tm->meas_params->num_params) {
 		if (ideal_dcg > 0.0) {
-			eval->values[tm->eval_index + cutoff_index].value /= ideal_dcg;
+			ndcg = eval->values[tm->eval_index + cutoff_index].value
+					/ ideal_dcg;
+			eval->values[tm->eval_index + cutoff_index].value = (double) log(
+					(double) (MAX(ndcg, MIN_GEO_MEAN)));
 		}
 		if (epi->debug_level > 0) {
 			printf("ndcg_cut: cutoff %ld idcg %6.4f\n", cutoffs[cutoff_index],

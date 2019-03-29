@@ -80,8 +80,7 @@ int te_get_zscores(const EPI *epi, const char *zscores_file,
 	NULL == (trec_zscores_buf = malloc((unsigned) size + 2))
 			|| -1 == lseek(fd, 0L, 0)
 			|| size != read(fd, trec_zscores_buf, size) || -1 == close(fd)) {
-		fprintf(stderr,
-				"rec_eval.get_zscores: Cannot read zscores file '%s'\n",
+		fprintf(stderr, "rec_eval.get_zscores: Cannot read zscores file '%s'\n",
 				zscores_file);
 		return (UNDEF);
 	}

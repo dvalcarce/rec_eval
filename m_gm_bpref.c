@@ -1,8 +1,8 @@
-/* 
- Copyright (c) 2008 - Chris Buckley. 
+/*
+ Copyright (c) 2008 - Chris Buckley.
 
  Permission is granted for use and modification of this file for
- research, non-commercial purposes. 
+ research, non-commercial purposes.
  */
 
 #include "common.h"
@@ -18,7 +18,7 @@ te_calc_gm_bpref(const EPI *epi, const REL_INFO *rel_info,
 /* See trec_eval.h for definition of TREC_MEAS */
 TREC_MEAS te_meas_gm_bpref =
 		{ "gm_bpref",
-				"   Binary preference (bpref), but using goemetric mean over topics\n\
+				"   Binary preference (bpref), but using geometric mean over topics\n\
     See the explanation for 'bpref' for the base measure for a single topic.\n\
     Gm_bpref uses the geometric mean to combine the single topic scores.\n\
     This rewards methods that are more consistent across topics as opposed to\n\
@@ -46,7 +46,7 @@ static int te_calc_gm_bpref(const EPI *epi, const REL_INFO *rel_info,
 
 	/* Calculate judgement based measures (dependent on only
 	 judged docs; no assumption of non-relevance if not judged) */
-	/* Binary Preference measures; here expressed as all docs with a higher 
+	/* Binary Preference measures; here expressed as all docs with a higher
 	 value of rel are to be preferred.  Optimize by keeping track of nonrel
 	 seen so far */
 	nonrel_so_far = 0;

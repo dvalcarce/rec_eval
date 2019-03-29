@@ -72,14 +72,12 @@ int te_get_trec_results(EPI *epi, char *text_results_file,
 					(char *) mmap((caddr_t) 0, (size_t) size,
 					PROT_READ,
 					MAP_SHARED, fd, (off_t) 0))) {
-		fprintf(stderr,
-				"rec_eval.get_results: Cannot read results file '%s'\n",
+		fprintf(stderr, "rec_eval.get_results: Cannot read results file '%s'\n",
 				text_results_file);
 		return (UNDEF);
 	}
 	if (NULL == (trec_results_buf = malloc((size_t) size + 2))) {
-		fprintf(stderr,
-				"rec_eval.get_results: Cannot copy results file '%s'\n",
+		fprintf(stderr, "rec_eval.get_results: Cannot copy results file '%s'\n",
 				text_results_file);
 		return (UNDEF);
 	}
