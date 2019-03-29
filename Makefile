@@ -31,7 +31,6 @@ FORMAT_SRCS = get_qrels.c get_trec_results.c get_prefs.c get_qrels_prefs.c \
 
 MEAS_SRCS =  measures.c \
 		m_map.c \
-		m_gm_P.c \
 		m_P.c \
 		m_num_q.c \
 		m_num_ret.c \
@@ -47,13 +46,12 @@ MEAS_SRCS =  measures.c \
 		m_gm_bpref.c \
 		m_bpref.c \
 		m_iprec_at_recall.c \
-		m_gm_recall.c \
 		m_recall.c \
 		m_Rprec_mult.c \
 		m_utility.c \
 		m_11pt_avg.c \
 		m_ndcg.c \
-		m_gm_ndcg_cut.c \
+		m_gm_ndcg.c \
 		m_ndcg_cut.c \
 		m_Rndcg.c \
 		m_ndcg_rel.c \
@@ -76,7 +74,9 @@ MEAS_SRCS =  measures.c \
 		m_runid.c \
 		m_relstring.c \
 		m_set_P.c \
+		m_gm_set_P.c \
 		m_set_recall.c \
+		m_gm_set_recall.c \
 		m_set_rel_P.c \
 		m_set_map.c \
 		m_gm_set_F.c \

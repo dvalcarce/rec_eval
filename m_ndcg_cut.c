@@ -18,7 +18,7 @@ static PARAMS default_ndcg_cutoffs = { NULL, sizeof(long_cutoff_array)
 		/ sizeof(long_cutoff_array[0]), &long_cutoff_array[0] };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_ndcg_cut =
+TREC_MEAS te_meas_ndcg_cut =
 		{ "ndcg_cut",
 				"    Normalized Discounted Cumulative Gain at cutoffs.\n\
     Compute a traditional nDCG measure according to Jarvelin and\n\

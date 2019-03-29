@@ -76,10 +76,8 @@ extern TREC_MEAS te_meas_gm_err;
 extern TREC_MEAS te_meas_err45;
 extern TREC_MEAS te_meas_iprec_at_recall;
 extern TREC_MEAS te_meas_P;
-extern TREC_MEAS te_meas_gm_P;
 extern TREC_MEAS te_meas_relstring;
 extern TREC_MEAS te_meas_recall;
-extern TREC_MEAS te_meas_gm_recall;
 extern TREC_MEAS te_meas_infAP;
 extern TREC_MEAS te_meas_infAP2;
 extern TREC_MEAS te_meas_gm_infAP2;
@@ -89,8 +87,8 @@ extern TREC_MEAS te_meas_11pt_avg;
 extern TREC_MEAS te_meas_binG;
 extern TREC_MEAS te_meas_G;
 extern TREC_MEAS te_meas_ndcg;
+extern TREC_MEAS te_meas_gm_ndcg;
 extern TREC_MEAS te_meas_ndcg_cut;
-extern TREC_MEAS te_meas_gm_ndcg_cut;
 extern TREC_MEAS te_meas_ndcg2;
 extern TREC_MEAS te_meas_ndcg2_cut;
 extern TREC_MEAS te_meas_ndcg_rel;
@@ -104,8 +102,10 @@ extern TREC_MEAS te_meas_qm45_cut;
 extern TREC_MEAS te_meas_relative_P;
 extern TREC_MEAS te_meas_success;
 extern TREC_MEAS te_meas_set_P;
+extern TREC_MEAS te_meas_gm_set_P;
 extern TREC_MEAS te_meas_set_relative_P;
 extern TREC_MEAS te_meas_set_recall;
+extern TREC_MEAS te_meas_gm_set_recall;
 extern TREC_MEAS te_meas_set_map;
 extern TREC_MEAS te_meas_set_F;
 extern TREC_MEAS te_meas_gm_set_F;
@@ -135,11 +135,11 @@ TREC_MEAS *te_trec_measures[] = { &te_meas_runid, &te_meas_num_q,
 		&te_meas_num_ret, &te_meas_num_rel, &te_meas_num_rel_ret, &te_meas_map,
 		&te_meas_gm_map, &te_meas_Rprec, &te_meas_bpref, &te_meas_recip_rank,
 		&te_meas_gm_recip_rank, &te_meas_err, &te_meas_gm_err, &te_meas_err45,
-		&te_meas_iprec_at_recall, &te_meas_P, &te_meas_gm_P, &te_meas_relstring,
-		&te_meas_recall, &te_meas_gm_recall, &te_meas_infAP, &te_meas_infAP2,
+		&te_meas_iprec_at_recall, &te_meas_P, &te_meas_gm_set_P, &te_meas_relstring,
+		&te_meas_recall, &te_meas_gm_set_recall, &te_meas_infAP, &te_meas_infAP2,
 		&te_meas_gm_infAP2, &te_meas_gm_bpref, &te_meas_Rprec_mult,
 		&te_meas_utility, &te_meas_11pt_avg, &te_meas_binG, &te_meas_G,
-		&te_meas_ndcg, &te_meas_ndcg_cut, &te_meas_gm_ndcg_cut, &te_meas_ndcg2,
+		&te_meas_ndcg, &te_meas_ndcg_cut, &te_meas_gm_ndcg, &te_meas_ndcg2,
 		&te_meas_ndcg2_cut, &te_meas_ndcg_rel, &te_meas_Rndcg, &te_meas_ndcg45,
 		&te_meas_ndcg45_cut, &te_meas_qm, &te_meas_qm_cut, &te_meas_qm45,
 		&te_meas_qm45_cut, &te_meas_map_cut, &te_meas_relative_P,

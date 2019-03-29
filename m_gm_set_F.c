@@ -24,7 +24,7 @@ NULL, sizeof(set_F_param_array) / sizeof(set_F_param_array[0]),
 TREC_MEAS te_meas_gm_set_F = { "gm_set_F",
 		"      F-measure using geometric mean over the topics.\n",
 		te_init_meas_s_float_p_float, te_calc_gm_set_F, te_acc_meas_s,
-		te_calc_avg_meas_s, te_print_single_meas_empty,
+		te_calc_avg_meas_s_gm, te_print_single_meas_empty,
 		te_print_final_meas_s_float_p, (void *) &default_set_F_params, -1 };
 
 static int te_calc_gm_set_F(const EPI *epi, const REL_INFO *rel_info,
