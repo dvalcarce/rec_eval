@@ -18,7 +18,7 @@ te_calc_gm_recip_rank(const EPI *epi, const REL_INFO *rel_info,
 
 /* See trec_eval.h for definition of TREC_MEAS */
 TREC_MEAS te_meas_gm_recip_rank = { "gm_recip_rank",
-		"    Reciprocal Rank using geometric mean over the topics..\n",
+		"    Reciprocal Rank using geometric mean over the topics.\n",
 		te_init_meas_s_float, te_calc_gm_recip_rank, te_acc_meas_s,
 		te_calc_avg_meas_s, te_print_single_meas_empty,
 		te_print_final_meas_s_float,
