@@ -17,7 +17,7 @@ te_calc_gm_infap2(const EPI *epi, const REL_INFO *rel_info,
 		const RESULTS *results, const TREC_MEAS *tm, TREC_EVAL *eval);
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_infAP2 = { "infAP2",
+TREC_MEAS te_meas_gm_infAP2 = { "gm_infAP2",
 		"    InfAP2  using geometric mean over the topics.\n",
 		te_init_meas_s_float, te_calc_gm_infap2, te_acc_meas_s,
 		te_calc_avg_meas_s, te_print_single_meas_empty,

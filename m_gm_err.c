@@ -16,7 +16,7 @@ te_calc_gm_err(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 		const TREC_MEAS *tm, TREC_EVAL *eval);
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_err = { "err",
+TREC_MEAS te_meas_gm_err = { "gm_err",
 		"    ERR using geometric mean over the topics.\n", te_init_meas_s_float,
 		te_calc_gm_err, te_acc_meas_s, te_calc_avg_meas_s,
 		te_print_single_meas_empty, te_print_final_meas_s_float, NULL, -1 };

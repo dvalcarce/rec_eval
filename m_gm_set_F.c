@@ -21,7 +21,7 @@ NULL, sizeof(set_F_param_array) / sizeof(set_F_param_array[0]),
 		&set_F_param_array[0] };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_set_F = { "set_F",
+TREC_MEAS te_meas_gm_set_F = { "gm_set_F",
 		"      F-measure using geometric mean over the topics.\n",
 		te_init_meas_s_float_p_float, te_calc_gm_set_F, te_acc_meas_s,
 		te_calc_avg_meas_s, te_print_single_meas_empty,

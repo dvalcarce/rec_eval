@@ -17,7 +17,7 @@ te_calc_infap(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 
 /* See trec_eval.h for definition of TREC_MEAS */
 TREC_MEAS te_meas_infAP =
-		{ "infAP",
+		{ "gm_infAP",
 				"    Inferred AP\n\
     A measure that allows sampling of judgement pool: Qrels/results divided\n\
     into unpooled, pooled_but_unjudged, pooled_judged_rel,pooled_judged_nonrel.\n\

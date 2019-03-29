@@ -21,7 +21,7 @@ NULL, sizeof(long_cutoff_array) / sizeof(long_cutoff_array[0]),
 		&long_cutoff_array[0] };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_recall = { "recall",
+TREC_MEAS te_meas_gm_recall = { "gm_recall",
 		"    Recall using geometric mean over the topics.\n",
 		te_init_meas_a_float_cut_long, te_calc_gm_recall, te_acc_meas_a_cut,
 		te_calc_avg_meas_a_cut, te_print_single_meas_empty,

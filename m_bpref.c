@@ -17,7 +17,7 @@ te_calc_bpref(const EPI *epi, const REL_INFO *rel_info, const RESULTS *results,
 
 /* See trec_eval.h for definition of TREC_MEAS */
 TREC_MEAS te_meas_bpref =
-		{ "bpref",
+		{ "gm_bpref",
 				"    Main binary preference measure.\n\
     Fraction of the top R nonrelevant docs that are retrieved after each\n\
     relevant doc. Put another way: when looking at the R relevant docs, and\n\

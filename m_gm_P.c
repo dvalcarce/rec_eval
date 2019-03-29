@@ -20,7 +20,7 @@ NULL, sizeof(long_cutoff_array) / sizeof(long_cutoff_array[0]),
 		&long_cutoff_array[0] };
 
 /* See trec_eval.h for definition of TREC_MEAS */
-TREC_MEAS te_meas_gm_P = { "P",
+TREC_MEAS te_meas_gm_P = { "gm_P",
 		"    Precision using geometric mean over the topics.\n",
 		te_init_meas_a_float_cut_long, te_calc_gm_P, te_acc_meas_a_cut,
 		te_calc_avg_meas_a_cut, te_print_single_meas_empty,
