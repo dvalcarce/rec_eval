@@ -252,6 +252,7 @@ static int get_long_cutoffs(PARAMS *params, char *param_string) {
 	char *ptr, *start_ptr;
 	long *cutoffs;
 	long i;
+	size_t len = strlen(param_string);
 
 	/* Count number of parameters in param_string (comma separated) */
 	num_cutoffs = 1;
@@ -261,13 +262,10 @@ static int get_long_cutoffs(PARAMS *params, char *param_string) {
 	}
 
 	/* Reserve space for cutoffs */
-	if (NULL
-			== (params->printable_params = Malloc(strlen(param_string) + 1,
-					char)) ||
+	if (NULL == (params->printable_params = Malloc(len + 1, char)) ||
 	NULL == (cutoffs = Malloc(num_cutoffs, long)))
 		return (UNDEF);
-	(void) strncpy(params->printable_params, param_string,
-			strlen(param_string) + 1);
+	(void) strncpy(params->printable_params, param_string, len + 1);
 
 	params->num_params = num_cutoffs;
 	params->param_values = cutoffs;
@@ -305,6 +303,7 @@ static int get_float_cutoffs(PARAMS *params, char *param_string) {
 	char *ptr, *start_ptr;
 	double *cutoffs;
 	long i;
+	size_t len;
 
 	/* Count number of parameters in param_string (comma separated) */
 	num_cutoffs = 1;
@@ -312,15 +311,12 @@ static int get_float_cutoffs(PARAMS *params, char *param_string) {
 		if (*ptr == ',')
 			num_cutoffs++;
 	}
-
+	len = strlen(param_string);
 	/* Reserve space for cutoffs */
-	if (NULL
-			== (params->printable_params = Malloc(strlen(param_string) + 1,
-					char)) ||
+	if (NULL == (params->printable_params = Malloc(len + 1, char)) ||
 	NULL == (cutoffs = Malloc(num_cutoffs, double)))
 		return (UNDEF);
-	(void) strncpy(params->printable_params, param_string,
-			strlen(param_string) + 1);
+	(void) strncpy(params->printable_params, param_string, len + 1);
 
 	params->num_params = num_cutoffs;
 	params->param_values = cutoffs;
@@ -353,6 +349,7 @@ static int get_float_params(PARAMS *params, char *param_string) {
 	long num_params;
 	char *ptr, *start_ptr;
 	double *values;
+	size_t len;
 
 	/* Count number of parameters in param_string (comma separated) */
 	num_params = 1;
@@ -360,16 +357,13 @@ static int get_float_params(PARAMS *params, char *param_string) {
 		if (*ptr == ',')
 			num_params++;
 	}
-
+	len = strlen(param_string);
 	/* Reserve space for params */
-	if (NULL
-			== (params->printable_params = Malloc(strlen(param_string) + 1,
-					char)) ||
+	if (NULL == (params->printable_params = Malloc(len + 1, char)) ||
 	NULL == (values = Malloc(num_params, double)))
 		return (UNDEF);
 
-	(void) strncpy(params->printable_params, param_string,
-			strlen(param_string) + 1);
+	(void) strncpy(params->printable_params, param_string, len + 1);
 
 	start_ptr = param_string;
 	num_params = 0;
@@ -392,6 +386,7 @@ static int get_param_pairs(PARAMS *params, char *param_string) {
 	char last_seen;
 	char *ptr, *start_ptr;
 	FLOAT_PARAM_PAIR *values;
+	size_t len;
 
 	/* Count number of parameters in param_string (comma separated), all
 	 of form name=value.  Return error if not of right form */
@@ -417,15 +412,13 @@ static int get_param_pairs(PARAMS *params, char *param_string) {
 		return (UNDEF);
 	}
 
+	len = strlen(param_string);
 	/* Reserve space for params */
-	if (NULL
-			== (params->printable_params = Malloc(strlen(param_string) + 1,
-					char)) ||
+	if (NULL == (params->printable_params = Malloc(len + 1, char)) ||
 	NULL == (values = Malloc(num_params, FLOAT_PARAM_PAIR)))
 		return (UNDEF);
 
-	(void) strncpy(params->printable_params, param_string,
-			strlen(param_string) + 1);
+	(void) strncpy(params->printable_params, param_string, len + 1);
 
 	start_ptr = param_string;
 	num_params = 0;

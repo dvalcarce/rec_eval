@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 Change Log  (only recent)
 ------------------------------------------------------------------------------
+3/29/19 Version 10.6
+       Add geometric measures (gm_P, gm_err, gm_infap2, gm_ndcg_cut,
+       gm_recall, gm_recip_rank, gm_set_F).
 4/19/17 Version 10.5
        Fix err and add err45.
 4/7/17 Version 10.4
